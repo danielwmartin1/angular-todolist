@@ -23,14 +23,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.css"],
-            "scripts": [],
-            "resolve": {
-              "fallback": {
-                "path": "path-browserify",
-                "os": "os-browserify/browser",
-                "crypto": "crypto-browserify"
-              }
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -74,8 +67,7 @@
             "development": {
               "browserTarget": "angular-test:build:development"
             }
-          },
-          "defaultConfiguration": "development"
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
