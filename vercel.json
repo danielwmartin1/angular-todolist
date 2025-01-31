@@ -1,0 +1,7 @@
+{
+  "build": {
+    "env": {
+      "SUPABASE_KEY": "@SUPABASE_KEY"
+    }
+  }
+}
