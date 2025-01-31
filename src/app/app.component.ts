@@ -1,18 +1,18 @@
 import { Component, OnInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { createClient } from '@supabase/supabase-js';
 import { enableProdMode } from '@angular/core';
-import { environment } from '../environments/environment';
+
+// Remove this line
+// import { environment } from '../environments/environment';
 
 const supabaseUrl = 'https://afhmppsklvgzzqlipkki.supabase.co';
-const supabaseKey = environment.supabaseKey;
+const supabaseKey = process.env['SUPABASE_KEY'];
 if (!supabaseKey) {
   throw new Error('Supabase key is not defined. Please check your environment variables.');
 }
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-if (environment.production) {
-  enableProdMode();
-}
+// Removed environment check for production mode
 
 @Component({
   selector: 'app-root',

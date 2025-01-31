@@ -11,6 +11,7 @@
     "deploy": "npm run vercel-build && vercel --prod --confirm"
   },
   "dependencies": {
+    "@angular-builders/custom-webpack": "^19.0.0",
     "@angular/animations": "^15.2.10",
     "@angular/common": "^15.2.10",
     "@angular/compiler": "^15.2.10",

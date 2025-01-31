@@ -45,8 +45,6 @@ Thumbs.db
 
 # Environment files
 .env
-/src/environments/environment.prod.ts
-/src/environments/environment.ts
 
 # Lock files
 /lock
