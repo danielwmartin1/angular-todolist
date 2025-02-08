@@ -62,6 +62,15 @@ form {
   font-size: 0.8rem;
 }
 
+.listItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100vw;
+  gap: 1rem;
+}
+
 .todo-list button, .addButton, .removeButton {
   width: 80px; /* Set a fixed width for all buttons */
   padding: 0.5rem; /* Set padding for all buttons */
