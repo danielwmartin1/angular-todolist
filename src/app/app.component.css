@@ -9,15 +9,20 @@
   padding: 0;
   margin: 0 auto; /* Center the list */
   width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the list items */
 }
 
 .todo-list li {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* Equal width fields */
+  grid-template-columns: repeat(4, 1fr); /* Equal width fields */
   align-items: center;
   padding: 0.5rem;
   border-bottom: 1px solid #ccc;
   color: white;
+  width: 100%; /* Ensure list items take full width */
+  max-width: 1000px; /* Set a max width for list items */
 }
 
 .todo-list li.completed {
@@ -38,7 +43,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-right: 1rem; /* Add margin to the right */
 }
 
 .todo-date {
@@ -46,9 +50,9 @@
 }
 
 .todo-list button, .addButton, .removeButton {
-  width: 100px; /* Set a fixed width for all buttons */
+  width: 80px; /* Set a fixed width for all buttons */
   padding: 0.5rem; /* Set padding for all buttons */
-  margin: 0 0.5rem; /* Add margin between buttons */
+  margin: 0.5rem; /* Add margin between buttons */
   background-color: #007bff; /* Set a background color */
   color: white; /* Set text color */
   border: none; /* Remove default border */
@@ -174,8 +178,8 @@ button:active {
   }
 
   .todo-list button, .addButton, .removeButton {
-    width: 80px; /* Reduce width for smaller screens */
-    padding: 0.3rem; /* Reduce padding for smaller screens */
+    width: 60px; /* Reduce width for smaller screens */
+    padding: 0.5rem; /* Reduce padding for smaller screens */
     margin: 0.3rem; /* Reduce margin for smaller screens */
   }
 
@@ -209,7 +213,7 @@ button:active {
   }
 
   .todo-list button, .addButton, .removeButton {
-    width: 90px; /* Adjust width for medium screens */
+    width: 80px; /* Adjust width for medium screens */
     padding: 0.4rem; /* Adjust padding for medium screens */
     margin: 0.4rem; /* Adjust margin for medium screens */
   }
