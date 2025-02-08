@@ -89,6 +89,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   margin: 0;
+  overflow: auto;
 }
 
 .toolbar {
@@ -196,6 +197,10 @@ button:active {
     padding: 0.2rem 0.4rem;
     font-size: 0.8rem;
   }
+
+  form {
+    margin: 0.5rem auto;
+  }
 }
 
 @media (min-width: 601px) and (max-width: 1024px) {
@@ -226,6 +231,10 @@ button:active {
   button {
     padding: 0.3rem 0.5rem;
     font-size: 0.9rem;
+  }
+
+  form {
+    margin: 0.75rem auto;
   }
 }
 
@@ -275,8 +284,27 @@ button:active {
   justify-content: center;
   align-items: center;
   color: white;
+  overflow: auto;
 }
 
 .todo-date {
   color: white;
+}
+
+.main-container {
+  flex: 1;
+  overflow-y: auto;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  margin: 1rem auto;
 }
