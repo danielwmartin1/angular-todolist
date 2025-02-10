@@ -16,14 +16,14 @@ button {
 /* Media query for smaller screens */
 @media (max-width: 600px) {
     button {
-        padding: auto !important;
+        padding: 5px 10px !important;
         font-size: 12px !important;
     }
-
-
 }
 
 @media (max-width: 400px) {
-
-    
+    button {
+        padding: 2px 5px !important;
+        font-size: 10px !important;
+    }
 }
