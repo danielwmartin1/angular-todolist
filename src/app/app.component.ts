@@ -4,7 +4,7 @@ import { enableProdMode } from '@angular/core';
 import { environment } from '../environments/environment';
 
 const supabaseUrl = 'https://afhmppsklvgzzqlipkki.supabase.co';
-const supabaseKey = process.env['SUPABASE_KEY'];
+const supabaseKey = environment.SUPABASE_KEY;
 if (!supabaseKey) {
   throw new Error('Supabase key is not defined. Please check your environment variables.');
 }
@@ -162,3 +162,4 @@ export class AppComponent implements OnInit {
     }
   }
 }
+
