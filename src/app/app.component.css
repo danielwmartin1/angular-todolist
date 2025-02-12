@@ -88,6 +88,7 @@ form {
   align-items: flex-start;
   font-size: 1rem;
   text-align: left;
+  width: 100%;
 } 
 
 .todo-date {
@@ -100,7 +101,11 @@ form {
   justify-content: center;
   align-items: center;
   width: 100%;
-  gap: 1rem;
+  gap: 0.5rem;
+}
+
+.todo-date {
+  margin: 0.5rem;
 }
 
 .todo-actions {
@@ -229,6 +234,10 @@ button:active {
     padding: 0.3rem;
   }
 
+  .todo-date {
+    margin: 0.3rem;
+  }
+
   .toolbar, footer, header {
     padding: 0.5rem;
   }
@@ -253,7 +262,7 @@ button:active {
     padding: 0.3rem;
   }
 
-  .todo-list button, .addButton, .removeButton {
+  .todo-list button, .addButton, .editButton .removeButton {
     width: 3.75rem;
     padding: 0.3rem;
     margin: 0.3rem;
@@ -288,7 +297,7 @@ button:active {
     padding: 0.4rem;
   }
 
-  .todo-list button, .addButton, .removeButton {
+  .todo-list button, .addButton, .editButton, .removeButton {
     width: 5rem;
     padding: 0.4rem;
     margin: 0.4rem;
