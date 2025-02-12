@@ -11,6 +11,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
 form {
   display: flex;
   justify-content: center;
