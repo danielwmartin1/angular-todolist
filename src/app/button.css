@@ -1,0 +1,51 @@
+button, .addButton, .removeButton {
+  width: 5rem;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover, .addButton:hover, .removeButton:hover {
+  background-color: #0056b3;
+}
+
+button:active, .addButton:active, .removeButton:active {
+  background-color: #003f7f;
+  transform: scale(0.95);
+}
+
+.removeButton {
+  background-color: #dc3545 !important;
+}
+
+.removeButton:hover {
+  background-color: #961421 !important;
+}
+
+.removeButton:active {
+  background-color: #cf0418 !important;
+}
+
+.addButton {
+  padding: 0.5rem 1rem;
+  background-color: #00b017;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.addButton:hover {
+  background-color: #028013;
+}
+
+.addButton:active {
+  background-color: #00ae17;
+  transform: scale(0.95);
+}

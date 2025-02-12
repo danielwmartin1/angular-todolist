@@ -1,3 +1,4 @@
+@import './button.css';
 
 :host {
   display: flex;
@@ -75,13 +76,19 @@ form {
 }
 
 .todo-text, .todo-date {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   overflow: visible; /* Ensure overflow is visible */
   text-overflow: clip; /* Clip text instead of ellipsis */
   white-space: normal; /* Allow text to wrap */
 }
+
+.todo-text {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 1rem;
+  text-align: left;
+} 
 
 .todo-date {
   font-size: 0.8rem;
@@ -90,31 +97,10 @@ form {
 .listItem {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
   gap: 1rem;
-}
-
-.todo-list button, .addButton, .removeButton {
-  width: 5rem;
-  padding: 0.5rem;
-  margin: 0.5rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.todo-list button:hover, .addButton:hover, .removeButton:hover {
-  background-color: #0056b3;
-}
-
-.todo-list button:active, .addButton:active, .removeButton:active {
-  background-color: #003f7f;
-  transform: scale(0.95);
 }
 
 .todo-actions {
@@ -129,8 +115,6 @@ form {
   color: gray;
   opacity: 0.6;
 }
-
-
 
 .content {
   flex: 1;
@@ -232,37 +216,6 @@ button:active {
   color: white;
 }
 
-.removeButton {
-  background-color: #dc3545 !important;
-}
-
-.removeButton:hover {
-  background-color: #961421 !important;
-}
-
-.removeButton:active {
-  background-color: #cf0418 !important;
-}
-
-.addButton {
-  padding: 0.5rem 1rem;
-  background-color: #00b017;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.addButton:hover {
-  background-color: #028013;
-}
-
-.addButton:active {
-  background-color: #00ae17;
-  transform: scale(0.95);
-}
-
 .main-container {
   flex: 1;
   overflow-y: auto;
@@ -271,15 +224,9 @@ button:active {
   box-sizing: border-box;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .todo-list li {
     padding: 0.3rem;
-  }
-
-  .todo-list button, .addButton, .removeButton {
-    width: 3.75rem;
-    padding: 0.3rem;
-    margin: 0.5rem;
   }
 
   .toolbar, footer, header {
@@ -296,11 +243,6 @@ button:active {
     margin: 0.3rem;
   }
 
-  button {
-    padding: 0.2rem 0.4rem;
-    font-size: 0.8rem;
-  }
-
   form {
     margin: 0.5rem auto;
   }
@@ -313,7 +255,7 @@ button:active {
 
   .todo-list button, .addButton, .removeButton {
     width: 3.75rem;
-    padding: 0.3rem !important;
+    padding: 0.3rem;
     margin: 0.3rem;
   }
 
