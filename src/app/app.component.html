@@ -10,16 +10,12 @@
 
 <body class="content" role="main">
   <div class="main-container">
-    <h1>Todo List</h1>
     <form (submit)="addTodo()" #todoForm="ngForm">
       <input type="text" [(ngModel)]="newTodo" placeholder="Add a new todo" name="todo" required #todoInput="ngModel" />
       <button class="addButton" type="submit" [disabled]="todoForm.invalid">Add</button>
-      <div *ngIf="todoInput.invalid && (todoInput.dirty || todoInput.touched)">
-        <div *ngIf="todoInput.errors?.['required']">Todo is required.</div>
-      </div>
     </form>
     <ul class="todo-list scrollable">
-      <li class="listItem" *ngFor="let todo of todos" [class.completed]="todo.completed">
+      <li class="listItem" *ngFor="let todo of todos" [class.completed]="todo.completed" [ngClass]="{'editing': todo.editing}">
         <label>
           <input type="checkbox" [(ngModel)]="todo.completed" (change)="toggleTodoCompletion(todo)" title="Mark as completed" />
         </label>

@@ -1,7 +1,14 @@
-.completed {
-  text-decoration: line-through;
-  color: gray;
-  opacity: 0.6;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  color: #333;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 form {
@@ -45,6 +52,12 @@ form {
 .todo-list li.completed .todo-date {
   text-decoration: line-through;
   color: rgb(178, 178, 178);
+}
+
+.todo-list li.editing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .todo-list li:hover {
@@ -95,20 +108,19 @@ form {
 }
 
 .todo-actions {
-  
-}
-
-:host {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 1rem;
-  color: #333;
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  justify-content: center;
+  align-items: flex-end;
 }
+
+.completed {
+  text-decoration: line-through;
+  color: gray;
+  opacity: 0.6;
+}
+
+
 
 .content {
   flex: 1;
