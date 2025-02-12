@@ -33,6 +33,8 @@ form {
   color: white;
   width: 100%;
   max-width: 100%;
+  overflow: visible; /* Ensure overflow is visible */
+  word-wrap: break-word; /* Allow text to wrap */
 }
 
 .todo-list li.completed {
@@ -53,9 +55,9 @@ form {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible; /* Ensure overflow is visible */
+  text-overflow: clip; /* Clip text instead of ellipsis */
+  white-space: normal; /* Allow text to wrap */
 }
 
 .todo-date {
@@ -129,7 +131,6 @@ form {
   padding: 1rem;
   background-color: #005effcc;
   color: white;
-  border-bottom: 5px ridge aqua;
   width: 100%;
 }
 
@@ -151,6 +152,7 @@ header {
   justify-content: center;
   align-items: center;
   width: 100%;
+  border-bottom: 5px ridge aqua;
 }
 
 header > span {

@@ -23,7 +23,9 @@
         <label>
           <input type="checkbox" [(ngModel)]="todo.completed" (change)="toggleTodoCompletion(todo)" title="Mark as completed" />
         </label>
-        <span *ngIf="!todo.editing" class="todo-text">{{ todo.text }}</span>
+        <section class="todo-text">
+          <p *ngIf="!todo.editing" class="todo-text">{{ todo.text }}</p>
+        </section>
         <input #editInput *ngIf="todo.editing" [(ngModel)]="todo.text" (blur)="exitEdit(todo)" (keyup.enter)="updateTodoText(todo)" (keyup.esc)="exitEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
         <section class="todo-details">        
           <p class="todo-date">Created: {{ todo.createdAt | date:'short' }}</p>
