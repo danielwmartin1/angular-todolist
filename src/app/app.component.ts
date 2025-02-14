@@ -34,6 +34,11 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     console.log('ngOnInit called');
+    await this.fetchTodos();
+  }
+
+  async fetchTodos() {
+    console.log('fetchTodos called');
     try {
       const { data: todos, error } = await supabase
         .from('todos')
