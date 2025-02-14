@@ -22,7 +22,7 @@ if (environment.production) {
 export class AppComponent implements OnInit {
   title = 'angular-todolist';
   newTodo = '';
-  todos: { text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }[] = [];
+  todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }[] = [];
   currentYear: number = new Date().getFullYear();
 
   @ViewChild('editInput') editInput!: ElementRef;
@@ -37,7 +37,8 @@ export class AppComponent implements OnInit {
     try {
       const { data: todos, error } = await supabase
         .from('todos')
-        .select('*');
+        .select('*')
+        .order('updatedAt', { ascending: false }); // Sort by updatedAt in descending order
       if (error) {
         console.error('Error fetching todos:', error);
       } else {
@@ -58,13 +59,16 @@ export class AppComponent implements OnInit {
     console.log('addTodo called with newTodo:', this.newTodo);
     if (this.newTodo.trim()) {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('todos')
-          .insert([{ text: this.newTodo, completed: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }]);
+          .insert([{ text: this.newTodo, completed: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }])
+          .select(); // Select the inserted row to get the id
         if (error) {
           console.error('Error adding todo:', error);
         } else {
-          this.todos.push({ text: this.newTodo, completed: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+          const newTodo = data[0];
+          this.todos.push({ ...newTodo, editing: false });
+          this.sortTodos();
           this.newTodo = '';
           console.log('Todo added:', this.todos);
         }
@@ -74,17 +78,18 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async removeTodo(todo: { text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
+  async removeTodo(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
     console.log('removeTodo called with todo:', todo);
     try {
       const { error } = await supabase
         .from('todos')
         .delete()
-        .eq('text', todo.text);
+        .eq('id', todo.id); // Use id instead of text
       if (error) {
         console.error('Error removing todo:', error);
       } else {
-        this.todos = this.todos.filter(t => t.text !== todo.text);
+        this.todos = this.todos.filter(t => t.id !== todo.id);
+        this.sortTodos();
         console.log('Todo removed:', this.todos);
       }
     } catch (error) {
@@ -92,17 +97,18 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async toggleTodoCompletion(todo: { text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
+  async toggleTodoCompletion(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
     console.log('toggleTodoCompletion called with todo:', todo);
     try {
       const { error } = await supabase
         .from('todos')
         .update({ completed: todo.completed, updatedAt: new Date().toISOString() })
-        .eq('text', todo.text);
+        .eq('id', todo.id); // Use id instead of text
       if (error) {
         console.error('Error updating todo:', error);
       } else {
         todo.updatedAt = new Date().toISOString();
+        this.sortTodos();
         console.log('Todo completion toggled:', todo);
       }
     } catch (error) {
@@ -110,10 +116,10 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async updateTodoText(todo: { text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
+  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
     console.log('updateTodoText called with todo:', todo);
     todo.editing = false;
-    const originalTodo = this.todos.find(t => t.createdAt === todo.createdAt);
+    const originalTodo = this.todos.find(t => t.id === todo.id);
     if (originalTodo && originalTodo.text === todo.text) {
       return;
     }
@@ -121,11 +127,12 @@ export class AppComponent implements OnInit {
       const { error } = await supabase
         .from('todos')
         .update({ text: todo.text, updatedAt: new Date().toISOString() })
-        .eq('createdAt', todo.createdAt);
+        .eq('id', todo.id); // Use id instead of createdAt
       if (error) {
         console.error('Error updating todo text:', error);
       } else {
         todo.updatedAt = new Date().toISOString();
+        this.sortTodos();
         console.log('Todo text updated:', todo);
       }
     } catch (error) {
@@ -133,7 +140,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  editTodoText(todo: { text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }, inputElement: ElementRef | null) {
+  editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }, inputElement: ElementRef | null) {
     console.log('editTodoText called with todo:', todo);
     todo.editing = true;
     setTimeout(() => {
@@ -153,13 +160,17 @@ export class AppComponent implements OnInit {
     });
   }
 
-  exitEdit(todo: { text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
+  exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
     console.log('exitEdit called with todo:', todo);
     todo.editing = false;
     if (this.documentClickListener) {
       this.documentClickListener();
       this.documentClickListener = null;
     }
+  }
+
+  sortTodos() {
+    this.todos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
   }
 }
 
