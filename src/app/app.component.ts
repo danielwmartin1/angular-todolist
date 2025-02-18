@@ -128,10 +128,13 @@ export class AppComponent implements OnInit {
     if (originalTodo && originalTodo.text === todo.text) {
       return;
     }
+    const newUpdatedAt = new Date().toISOString();
+    todo.updatedAt = newUpdatedAt; // Update the updatedAt date immediately
+    this.sortTodos(); // Sort todos immediately after updating the date
     try {
       const { data, error } = await supabase
         .from('todos')
-        .update({ text: todo.text, updatedAt: new Date().toISOString(), other_column: 'otherValue' }) // Update text and other_column
+        .update({ text: todo.text, updatedAt: newUpdatedAt }) // Update text and updatedAt
         .eq('id', todo.id)
         .select(); // Use id instead of createdAt
       if (error) {
@@ -141,8 +144,7 @@ export class AppComponent implements OnInit {
           const updatedTodo = this.todos.find(t => t.id === todo.id);
           if (updatedTodo) {
             updatedTodo.text = todo.text;
-            updatedTodo.updatedAt = new Date().toISOString();
-            this.sortTodos();
+            updatedTodo.updatedAt = newUpdatedAt;
             console.log('Todo text updated:', updatedTodo);
           }
         } else {
