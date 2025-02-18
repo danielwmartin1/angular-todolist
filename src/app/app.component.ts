@@ -145,6 +145,7 @@ export class AppComponent implements OnInit {
           if (updatedTodo) {
             updatedTodo.text = todo.text;
             updatedTodo.updatedAt = newUpdatedAt;
+            this.todos = [...this.todos]; // Trigger change detection
             console.log('Todo text updated:', updatedTodo);
           }
         } else {
