@@ -31,6 +31,10 @@ button:active, .addButton:active, .removeButton:active {
   background-color: #cf0418 !important;
 }
 
+.editButton {
+  padding: 0.5rem 1rem;
+}
+
 .addButton {
   padding: 0.5rem 1rem;
   background-color: #00b017;
