@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, Renderer2, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, PostgrestSingleResponse } from '@supabase/supabase-js';
 import { enableProdMode } from '@angular/core';
 import { environment } from '../environments/environment';
 
@@ -72,6 +72,7 @@ export class AppComponent implements OnInit {
         if (error) {
           console.error('Error adding todo:', error);
         } else {
+          console.log('Insert response:', data);
           const newTodo = data[0];
           this.todos.push({ ...newTodo, editing: false });
           this.sortTodos();
@@ -82,6 +83,8 @@ export class AppComponent implements OnInit {
       } catch (error) {
         console.error('Error adding todo:', error);
       }
+    } else {
+      console.log('New todo text is empty.');
     }
   }
 
@@ -134,21 +137,26 @@ export class AppComponent implements OnInit {
       return;
     }
     try {
-      const { data, error } = await supabase
+      const { data, error }: PostgrestSingleResponse<{ id: number, text: string, completed: boolean, createdAt: string, updatedAt: string }[]> = await supabase
         .from('todos')
         .update({ text: todo.text, updatedAt: new Date().toISOString() })
-        .eq('id', todo.id); // Use id instead of createdAt
+        .eq('id', todo.id)
+        .select(); // Use id instead of createdAt
       if (error) {
         console.error('Error updating todo text:', error);
       } else {
         console.log('Update response:', data);
-        const updatedTodo = this.todos.find(t => t.id === todo.id);
-        if (updatedTodo) {
-          updatedTodo.text = todo.text;
-          updatedTodo.updatedAt = new Date().toISOString();
-          this.sortTodos();
-          this.cdr.detectChanges(); // Trigger change detection
-          console.log('Todo text updated:', updatedTodo);
+        if (data && data.length > 0) {
+          const updatedTodo = this.todos.find(t => t.id === todo.id);
+          if (updatedTodo) {
+            updatedTodo.text = todo.text;
+            updatedTodo.updatedAt = new Date().toISOString();
+            this.sortTodos();
+            this.cdr.detectChanges(); // Trigger change detection
+            console.log('Todo text updated:', updatedTodo);
+          }
+        } else {
+          console.error('No data returned from update query.');
         }
       }
     } catch (error) {
@@ -183,6 +191,7 @@ export class AppComponent implements OnInit {
       this.documentClickListener();
       this.documentClickListener = null;
     }
+    this.updateTodoText(todo); // Ensure the text is updated when exiting edit mode
   }
 
   sortTodos() {
