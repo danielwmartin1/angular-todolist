@@ -1,5 +1,5 @@
-import { Component, OnInit, ElementRef, Renderer2, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { createClient, PostgrestSingleResponse } from '@supabase/supabase-js';
+import { Component, OnInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { createClient } from '@supabase/supabase-js';
 import { enableProdMode } from '@angular/core';
 import { environment } from '../environments/environment';
 
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
   @ViewChild('editInput') editInput!: ElementRef;
   private documentClickListener: (() => void) | null = null;
 
-  constructor(private el: ElementRef, private renderer: Renderer2, private cdr: ChangeDetectorRef) {
+  constructor(private el: ElementRef, private renderer: Renderer2) {
     console.log('AppComponent initialized');
   }
 
@@ -53,7 +53,6 @@ export class AppComponent implements OnInit {
           createdAt: todo.createdAt || new Date().toISOString(),
           updatedAt: todo.updatedAt || new Date().toISOString()
         }));
-        this.cdr.detectChanges(); // Trigger change detection
         console.log('Fetched todos:', this.todos);
       }
     } catch (error) {
@@ -72,19 +71,15 @@ export class AppComponent implements OnInit {
         if (error) {
           console.error('Error adding todo:', error);
         } else {
-          console.log('Insert response:', data);
           const newTodo = data[0];
           this.todos.push({ ...newTodo, editing: false });
           this.sortTodos();
           this.newTodo = '';
-          this.cdr.detectChanges(); // Trigger change detection
           console.log('Todo added:', this.todos);
         }
       } catch (error) {
         console.error('Error adding todo:', error);
       }
-    } else {
-      console.log('New todo text is empty.');
     }
   }
 
@@ -100,7 +95,6 @@ export class AppComponent implements OnInit {
       } else {
         this.todos = this.todos.filter(t => t.id !== todo.id);
         this.sortTodos();
-        this.cdr.detectChanges(); // Trigger change detection
         console.log('Todo removed:', this.todos);
       }
     } catch (error) {
@@ -120,7 +114,6 @@ export class AppComponent implements OnInit {
       } else {
         todo.updatedAt = new Date().toISOString();
         this.sortTodos();
-        this.cdr.detectChanges(); // Trigger change detection
         console.log('Todo completion toggled:', todo);
       }
     } catch (error) {
@@ -133,26 +126,23 @@ export class AppComponent implements OnInit {
     todo.editing = false;
     const originalTodo = this.todos.find(t => t.id === todo.id);
     if (originalTodo && originalTodo.text === todo.text) {
-      console.log('No changes detected in todo text.');
       return;
     }
     try {
-      const { data, error }: PostgrestSingleResponse<{ id: number, text: string, completed: boolean, createdAt: string, updatedAt: string }[]> = await supabase
+      const { data, error } = await supabase
         .from('todos')
-        .update({ text: todo.text, updatedAt: new Date().toISOString() })
+        .update({ text: todo.text, updatedAt: new Date().toISOString(), other_column: 'otherValue' }) // Update text and other_column
         .eq('id', todo.id)
         .select(); // Use id instead of createdAt
       if (error) {
         console.error('Error updating todo text:', error);
       } else {
-        console.log('Update response:', data);
         if (data && data.length > 0) {
           const updatedTodo = this.todos.find(t => t.id === todo.id);
           if (updatedTodo) {
             updatedTodo.text = todo.text;
             updatedTodo.updatedAt = new Date().toISOString();
             this.sortTodos();
-            this.cdr.detectChanges(); // Trigger change detection
             console.log('Todo text updated:', updatedTodo);
           }
         } else {
@@ -191,7 +181,6 @@ export class AppComponent implements OnInit {
       this.documentClickListener();
       this.documentClickListener = null;
     }
-    this.updateTodoText(todo); // Ensure the text is updated when exiting edit mode
   }
 
   sortTodos() {
