@@ -154,6 +154,23 @@ export class AppComponent implements OnInit {
     }
   }
 
+  async updateTodoInDatabase(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
+    console.log('updateTodoInDatabase called with todo:', todo);
+    try {
+      const { error } = await supabase
+        .from('todos')
+        .update({ text: todo.text, updatedAt: new Date().toISOString() })
+        .eq('id', todo.id);
+      if (error) {
+        console.error('Error updating todo in database:', error);
+      } else {
+        console.log('Todo updated in database:', todo);
+      }
+    } catch (error) {
+      console.error('Error updating todo in database:', error);
+    }
+  }
+
   editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }, inputElement: ElementRef | null) {
     console.log('editTodoText called with todo:', todo);
     todo.editing = true;
