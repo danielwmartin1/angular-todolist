@@ -130,6 +130,7 @@ export class AppComponent implements OnInit {
     }
     const newUpdatedAt = new Date().toISOString();
     todo.updatedAt = newUpdatedAt; // Update the updatedAt date immediately
+    this.todos = this.todos.map(t => t.id === todo.id ? { ...t, updatedAt: newUpdatedAt } : t); // Trigger change detection
     this.sortTodos(); // Sort todos immediately after updating the date
     try {
       const { data, error } = await supabase
@@ -145,7 +146,6 @@ export class AppComponent implements OnInit {
           if (updatedTodo) {
             updatedTodo.text = todo.text;
             updatedTodo.updatedAt = newUpdatedAt;
-            this.todos = [...this.todos]; // Trigger change detection
             console.log('Todo text updated:', updatedTodo);
           }
         } else {
