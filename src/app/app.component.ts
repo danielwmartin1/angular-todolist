@@ -161,6 +161,9 @@ export class AppComponent implements OnInit {
   }
 
   editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }, inputElement: ElementRef | null) {
+    if (todo.completed) {
+      return; // Do not allow editing if the todo is completed
+    }
     console.log('editTodoText called with todo:', todo);
     todo.editing = true;
     setTimeout(() => {
@@ -193,4 +196,3 @@ export class AppComponent implements OnInit {
     this.todos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
   }
 }
-
