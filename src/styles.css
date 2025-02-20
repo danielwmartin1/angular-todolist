@@ -1,4 +1,6 @@
 @import "app/button.css";
+@import "app/media-queries.css";
+@import "app/app.component.css";
 
 html, body, app-root {
     width: 100vw;

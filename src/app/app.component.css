@@ -1,4 +1,5 @@
 @import './button.css';
+@import './media-queries.css';
 
 :host {
   display: flex;
@@ -100,7 +101,6 @@ form {
   width: 100%;
   gap: 0.5rem;
   font-size: 0.8rem;
-
 }
 
 .todo-actions {
@@ -189,29 +189,6 @@ input {
   border: none;
 }
 
-button {
-  background-color: #005effcc;
-  color: white;
-  border: none;
-  padding: 0.25rem 0.5rem;
-  margin: 0.5rem;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s, transform 0.2s;
-  font-size: 1rem;
-}
-
-button:hover {
-  background-color: #0041cc;
-}
-
-button:active {
-  background-color: #0033a0;
-  background-size: cover;
-  background-repeat: no-repeat;
-  margin: 0;
-}
-
 .todo-details {
   display: flex;
   flex-direction: column;
@@ -248,7 +225,7 @@ button:active {
     margin: 0.5rem;
   }
 
-  input, button {
+  input {
     padding: 0.3rem;
     margin: 0.3rem;
     font-size: 0.8rem;
@@ -273,7 +250,7 @@ button:active {
     padding: 0.3rem;
   }
 
-  .todo-list button, .addButton, .editButton .removeButton {
+  .todo-list .addButton, .editButton .removeButton {
     width: 3.75rem;
     padding: 0.3rem;
     margin: 0.3rem;
@@ -289,7 +266,7 @@ button:active {
     margin: 0.5rem;
   }
 
-  input, button {
+  input {
     padding: 0.3rem;
     margin: 0.3rem;
     font-size: 0.9rem;
@@ -310,7 +287,7 @@ button:active {
 }
 
 @media (max-width: 768px) {
-  button, .addButton, .removeButton, .editButton, .updateButton {
+  .addButton, .removeButton, .editButton, .updateButton {
     font-size: 0.8rem; /* Make button text more responsive */
   }
 }
@@ -320,7 +297,7 @@ button:active {
     padding: 0.4rem;
   }
 
-  .todo-list button, .addButton, .editButton, .removeButton {
+  .todo-list .addButton, .editButton, .removeButton {
     width: 5rem;
     padding: 0.4rem;
     margin: 0.4rem;
@@ -336,7 +313,7 @@ button:active {
     margin: 0.75rem;
   }
 
-  input, button {
+  input {
     padding: 0.4rem;
     margin: 0.4rem;
     font-size: 1rem;
