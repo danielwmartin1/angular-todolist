@@ -161,9 +161,6 @@ export class AppComponent implements OnInit {
   }
 
   editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }, inputElement: ElementRef | null) {
-    if (todo.completed) {
-      return; // Do not allow editing if the todo is completed
-    }
     console.log('editTodoText called with todo:', todo);
     todo.editing = true;
     setTimeout(() => {
