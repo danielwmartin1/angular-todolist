@@ -22,11 +22,10 @@
         <section class="todo-text">
           <p *ngIf="!todo.editing" class="todo-text">{{ todo.text }}</p>
         </section>
-        <input #editInput *ngIf="todo.editing" [(ngModel)]="todo.text" (blur)="exitEdit(todo)" (keyup.enter)="updateTodoText(todo, false)" (keyup.esc)="exitEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
+        <input #editInput *ngIf="todo.editing" [(ngModel)]="todo.text" (blur)="updateTodoText(todo)" (keyup.enter)="updateTodoText(todo)" (keyup.esc)="exitEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
         <section class="todo-details" *ngIf="!todo.editing">        
           <p class="todo-date">Created: {{ todo.createdAt | date:'short' }}</p>
           <p class="todo-date">Updated: {{ todo.updatedAt | date:'short' }}</p>
-          <p class="todo-date" *ngIf="todo.completed">Completed: {{ todo.updatedAt | date:'short' }}</p>
         </section>
         <section class="todo-actions">
             <button id="editButton-{{todo.id}}" class="editButton" type="button" (click)="editTodoText(todo, editInput)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
