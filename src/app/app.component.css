@@ -86,14 +86,11 @@ form {
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  font-size: 1rem;
+  font-size: 1.15rem; /* Increased by 15% */
   text-align: left;
   width: 100%;
+  padding-left: 1rem;
 } 
-
-.todo-date {
-  font-size: 0.8rem;
-}
 
 .listItem {
   display: flex;
@@ -102,10 +99,8 @@ form {
   align-items: center;
   width: 100%;
   gap: 0.5rem;
-}
+  font-size: 0.8rem;
 
-.todo-date {
-  margin: 0.5rem;
 }
 
 .todo-actions {
@@ -217,8 +212,13 @@ button:active {
   margin: 0;
 }
 
-.todo-date {
-  color: white;
+.todo-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start; /* Align children to the left */
+  padding-left: 2rem;
+  font-size: 0.85rem; /* Decreased by 15% */
 }
 
 .main-container {
@@ -255,6 +255,15 @@ button:active {
   form {
     margin: 0.5rem auto;
   }
+
+  .todo-text {
+    font-size: 0.92rem; /* Increased by 15% */
+  }
+
+  .todo-details {
+    font-size: 0.68rem; /* Decreased by 15% */
+    padding-left: 1rem;
+  }
 }
 
 @media (max-width: 600px) {
@@ -290,6 +299,15 @@ button:active {
   form {
     margin: 0.5rem auto;
   }
+
+  .todo-text {
+    font-size: 1.035rem; /* Increased by 15% */
+  }
+
+  .todo-details {
+    font-size: 0.765rem; /* Decreased by 15% */
+    padding-left: 1.5rem;
+  }
 }
 
 @media (min-width: 601px) and (max-width: 1024px) {
@@ -324,5 +342,14 @@ button:active {
 
   form {
     margin: 0.75rem auto;
+  }
+
+  .todo-text {
+    font-size: 1.0925rem; /* Increased by 15% */
+  }
+
+  .todo-details {
+    font-size: 0.8075rem; /* Decreased by 15% */
+    padding-left: 1.75rem;
   }
 }
