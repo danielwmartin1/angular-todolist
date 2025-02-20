@@ -72,3 +72,9 @@ button:active, .addButton:active, .removeButton:active {
   background-color: #00ae17;
   transform: scale(0.95);
 }
+
+@media (max-width: 768px) {
+  button, .addButton, .removeButton, .editButton, .updateButton {
+    font-size: 0.8rem; /* Make button text more responsive */
+  }
+}

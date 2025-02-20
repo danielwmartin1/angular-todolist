@@ -240,6 +240,7 @@ button:active {
 
   .toolbar, footer, header {
     padding: 0.5rem;
+    font-size: 0.8rem;
   }
 
   h1 {
@@ -247,9 +248,10 @@ button:active {
     margin: 0.5rem;
   }
 
-  input {
+  input, button {
     padding: 0.3rem;
     margin: 0.3rem;
+    font-size: 0.8rem;
   }
 
   form {
@@ -279,21 +281,18 @@ button:active {
 
   .toolbar, footer, header {
     padding: 0.5rem;
+    font-size: 0.9rem;
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     margin: 0.5rem;
   }
 
-  input {
+  input, button {
     padding: 0.3rem;
     margin: 0.3rem;
-  }
-
-  button {
-    padding: 0.2rem 0.4rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 
   form {
@@ -310,6 +309,12 @@ button:active {
   }
 }
 
+@media (max-width: 768px) {
+  button, .addButton, .removeButton, .editButton, .updateButton {
+    font-size: 0.8rem; /* Make button text more responsive */
+  }
+}
+
 @media (min-width: 601px) and (max-width: 1024px) {
   .todo-list li {
     padding: 0.4rem;
@@ -323,21 +328,18 @@ button:active {
 
   .toolbar, footer, header {
     padding: 0.75rem;
+    font-size: 1rem;
   }
 
   h1 {
-    font-size: 1.75rem;
+    font-size: 2rem;
     margin: 0.75rem;
   }
 
-  input {
+  input, button {
     padding: 0.4rem;
     margin: 0.4rem;
-  }
-
-  button {
-    padding: 0.3rem 0.5rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   form {
