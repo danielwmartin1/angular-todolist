@@ -121,16 +121,18 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
+  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }, updateTimestamp: boolean = false) {
     console.log('updateTodoText called with todo:', todo);
     todo.editing = false;
     const originalTodo = this.todos.find(t => t.id === todo.id);
-    if (originalTodo && originalTodo.text === todo.text) {
+    if (originalTodo && originalTodo.text === todo.text && !updateTimestamp) {
       return;
     }
     const newUpdatedAt = new Date().toISOString();
-    todo.updatedAt = newUpdatedAt; // Update the updatedAt date immediately
-    this.todos = this.todos.map(t => t.id === todo.id ? { ...t, updatedAt: newUpdatedAt } : t); // Trigger change detection
+    if (updateTimestamp) {
+      todo.updatedAt = newUpdatedAt; // Update the updatedAt date immediately
+    }
+    this.todos = this.todos.map(t => t.id === todo.id ? { ...t, text: todo.text, updatedAt: newUpdatedAt } : t); // Trigger change detection
     this.sortTodos(); // Sort todos immediately after updating the date
     try {
       const { data, error } = await supabase
@@ -146,6 +148,7 @@ export class AppComponent implements OnInit {
           if (updatedTodo) {
             updatedTodo.text = todo.text;
             updatedTodo.updatedAt = newUpdatedAt;
+            this.todos = [...this.todos]; // Trigger change detection
             console.log('Todo text updated:', updatedTodo);
           }
         } else {

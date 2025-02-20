@@ -22,13 +22,13 @@
         <section class="todo-text">
           <p *ngIf="!todo.editing" class="todo-text">{{ todo.text }}</p>
         </section>
-        <input #editInput *ngIf="todo.editing" [(ngModel)]="todo.text" (blur)="updateTodoText(todo); updateTodoInDatabase(todo)" (keyup.enter)="updateTodoText(todo); updateTodoInDatabase(todo)" (keyup.esc)="exitEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
+        <input #editInput *ngIf="todo.editing" [(ngModel)]="todo.text" (blur)="updateTodoText(todo, true)" (keyup.enter)="updateTodoText(todo, true)" (keyup.esc)="exitEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
         <section class="todo-details" *ngIf="!todo.editing">        
           <p class="todo-date">Created: {{ todo.createdAt | date:'short' }}</p>
           <p class="todo-date">Updated: {{ todo.updatedAt | date:'short' }}</p>
         </section>
         <section class="todo-actions">
-            <button id="updateButton-{{todo.id}}" class="editButton" type="button" (click)="editTodoText(todo, editInput)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
+            <button id="editButton-{{todo.id}}" class="editButton" type="button" (click)="editTodoText(todo, editInput)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
             {{ todo.editing ? 'Update' : 'Edit' }}
             </button>
           <button class="removeButton" type="button" (click)="removeTodo(todo)" *ngIf="!todo.editing">Remove</button>
