@@ -144,18 +144,17 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async toggleTodoCompletion(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
+  async toggleTodoCompletion(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
     console.log('toggleTodoCompletion called with todo:', todo);
-    const newCompletedAt = todo.completed ? new Date().toISOString() : null;
     try {
       const { error } = await supabase
         .from('todos')
-        .update({ completed: todo.completed, completedAt: newCompletedAt })
+        .update({ completed: todo.completed, updatedAt: new Date().toISOString() })
         .eq('id', todo.id); // Use id instead of text
       if (error) {
         console.error('Error updating todo:', error);
       } else {
-        todo.completedAt = newCompletedAt ?? undefined; // Handle null case
+        todo.updatedAt = new Date().toISOString();
         this.sortTodos();
         console.log('Todo completion toggled:', todo);
       }
