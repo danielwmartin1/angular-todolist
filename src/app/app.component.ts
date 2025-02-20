@@ -63,7 +63,8 @@ export class AppComponent implements OnInit {
 
   async addTodo() {
     console.log('addTodo called with newTodo:', this.newTodo);
-    if (this.newTodo.trim()) {
+    this.newTodo = this.newTodo.trim(); // Trim the text input
+    if (this.newTodo) {
       try {
         const { data, error } = await supabase
           .from('todos')
@@ -81,6 +82,46 @@ export class AppComponent implements OnInit {
       } catch (error) {
         console.error('Error adding todo:', error);
       }
+    }
+  }
+
+  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }, updateTimestamp: boolean = false) {
+    console.log('updateTodoText called with todo:', todo);
+    todo.editing = false;
+    todo.text = todo.text.trim(); // Trim the text input
+    const originalTodo = this.todos.find(t => t.id === todo.id);
+    if (originalTodo && originalTodo.text === todo.text && !updateTimestamp) {
+      return;
+    }
+    const newUpdatedAt = new Date().toISOString();
+    if (updateTimestamp) {
+      todo.updatedAt = newUpdatedAt; // Update the updatedAt date immediately
+    }
+    this.todos = this.todos.map(t => t.id === todo.id ? { ...t, text: todo.text, updatedAt: newUpdatedAt } : t); // Trigger change detection
+    this.sortTodos(); // Sort todos immediately after updating the date
+    try {
+      const { data, error } = await supabase
+        .from('todos')
+        .update({ text: todo.text, updatedAt: newUpdatedAt }) // Update text and updatedAt
+        .eq('id', todo.id)
+        .select(); // Use id instead of createdAt
+      if (error) {
+        console.error('Error updating todo text:', error);
+      } else {
+        if (data && data.length > 0) {
+          const updatedTodo = this.todos.find(t => t.id === todo.id);
+          if (updatedTodo) {
+            updatedTodo.text = todo.text;
+            updatedTodo.updatedAt = newUpdatedAt;
+            this.todos = [...this.todos]; // Trigger change detection
+            console.log('Todo text updated:', updatedTodo);
+          }
+        } else {
+          console.error('No data returned from update query.');
+        }
+      }
+    } catch (error) {
+      console.error('Error updating todo text:', error);
     }
   }
 
@@ -123,45 +164,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }, updateTimestamp: boolean = false) {
-    console.log('updateTodoText called with todo:', todo);
-    todo.editing = false;
-    const originalTodo = this.todos.find(t => t.id === todo.id);
-    if (originalTodo && originalTodo.text === todo.text && !updateTimestamp) {
-      return;
-    }
-    const newUpdatedAt = new Date().toISOString();
-    if (updateTimestamp) {
-      todo.updatedAt = newUpdatedAt; // Update the updatedAt date immediately
-    }
-    this.todos = this.todos.map(t => t.id === todo.id ? { ...t, text: todo.text, updatedAt: newUpdatedAt } : t); // Trigger change detection
-    this.sortTodos(); // Sort todos immediately after updating the date
-    try {
-      const { data, error } = await supabase
-        .from('todos')
-        .update({ text: todo.text, updatedAt: newUpdatedAt }) // Update text and updatedAt
-        .eq('id', todo.id)
-        .select(); // Use id instead of createdAt
-      if (error) {
-        console.error('Error updating todo text:', error);
-      } else {
-        if (data && data.length > 0) {
-          const updatedTodo = this.todos.find(t => t.id === todo.id);
-          if (updatedTodo) {
-            updatedTodo.text = todo.text;
-            updatedTodo.updatedAt = newUpdatedAt;
-            this.todos = [...this.todos]; // Trigger change detection
-            console.log('Todo text updated:', updatedTodo);
-          }
-        } else {
-          console.error('No data returned from update query.');
-        }
-      }
-    } catch (error) {
-      console.error('Error updating todo text:', error);
-    }
-  }
-
   editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }, inputElement: ElementRef | null) {
     if (todo.completed) {
       console.log('Cannot edit a completed todo.');
@@ -192,6 +194,15 @@ export class AppComponent implements OnInit {
     if (originalTodo && originalTodo.text !== todo.text) {
       todo.text = originalTodo.text; // Revert text if it was changed
     }
+    todo.editing = false;
+    if (this.documentClickListener) {
+      this.documentClickListener();
+      this.documentClickListener = null;
+    }
+  }
+
+  cancelEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
+    console.log('cancelEdit called with todo:', todo);
     todo.editing = false;
     if (this.documentClickListener) {
       this.documentClickListener();
