@@ -123,9 +123,9 @@ export class AppComponent implements OnInit {
 
   async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }, updateTimestamp: boolean = false) {
     console.log('updateTodoText called with todo:', todo);
-    todo.editing = false;
     const originalTodo = this.todos.find(t => t.id === todo.id);
-    if (originalTodo && originalTodo.text === todo.text && !updateTimestamp) {
+    if (originalTodo && (originalTodo.text === todo.text || !updateTimestamp)) {
+      this.exitEdit(todo);
       return;
     }
     const newUpdatedAt = new Date().toISOString();
@@ -193,3 +193,4 @@ export class AppComponent implements OnInit {
     this.todos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
   }
 }
+
