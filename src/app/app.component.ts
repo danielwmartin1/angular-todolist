@@ -22,7 +22,7 @@ if (environment.production) {
 export class AppComponent implements OnInit {
   title = 'angular-todolist';
   newTodo = '';
-  todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }[] = [];
+  todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }[] = [];
   currentYear: number = new Date().getFullYear();
 
   @ViewChild('editInput') editInput!: ElementRef;
@@ -51,7 +51,8 @@ export class AppComponent implements OnInit {
           ...todo,
           completed: todo.completed || false,
           createdAt: todo.createdAt || new Date().toISOString(),
-          updatedAt: todo.updatedAt || new Date().toISOString()
+          updatedAt: todo.updatedAt || new Date().toISOString(),
+          completedAt: todo.completed ? todo.updatedAt : undefined
         }));
         console.log('Fetched todos:', this.todos);
       }
@@ -83,7 +84,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async removeTodo(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
+  async removeTodo(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
     console.log('removeTodo called with todo:', todo);
     try {
       const { error } = await supabase
@@ -102,17 +103,18 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async toggleTodoCompletion(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
+  async toggleTodoCompletion(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
     console.log('toggleTodoCompletion called with todo:', todo);
+    const newCompletedAt = todo.completed ? new Date().toISOString() : null;
     try {
       const { error } = await supabase
         .from('todos')
-        .update({ completed: todo.completed, updatedAt: new Date().toISOString() })
+        .update({ completed: todo.completed, completedAt: newCompletedAt })
         .eq('id', todo.id); // Use id instead of text
       if (error) {
         console.error('Error updating todo:', error);
       } else {
-        todo.updatedAt = new Date().toISOString();
+        todo.completedAt = newCompletedAt ?? undefined; // Handle null case
         this.sortTodos();
         console.log('Todo completion toggled:', todo);
       }
@@ -121,11 +123,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }, updateTimestamp: boolean = false) {
+  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }, updateTimestamp: boolean = false) {
     console.log('updateTodoText called with todo:', todo);
+    todo.editing = false;
     const originalTodo = this.todos.find(t => t.id === todo.id);
-    if (originalTodo && (originalTodo.text === todo.text || !updateTimestamp)) {
-      this.exitEdit(todo);
+    if (originalTodo && originalTodo.text === todo.text && !updateTimestamp) {
       return;
     }
     const newUpdatedAt = new Date().toISOString();
@@ -160,7 +162,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }, inputElement: ElementRef | null) {
+  editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }, inputElement: ElementRef | null) {
+    if (todo.completed) {
+      console.log('Cannot edit a completed todo.');
+      return;
+    }
     console.log('editTodoText called with todo:', todo);
     todo.editing = true;
     setTimeout(() => {
@@ -180,8 +186,12 @@ export class AppComponent implements OnInit {
     });
   }
 
-  exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
+  exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
     console.log('exitEdit called with todo:', todo);
+    const originalTodo = this.todos.find(t => t.id === todo.id);
+    if (originalTodo && originalTodo.text !== todo.text) {
+      todo.text = originalTodo.text; // Revert text if it was changed
+    }
     todo.editing = false;
     if (this.documentClickListener) {
       this.documentClickListener();
