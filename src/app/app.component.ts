@@ -189,19 +189,15 @@ export class AppComponent implements OnInit {
 
   exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
     console.log('exitEdit called with todo:', todo);
-    const originalTodo = this.todos.find(t => t.id === todo.id);
-    if (originalTodo && originalTodo.text !== todo.text) {
-      todo.text = originalTodo.text; // Revert text if it was changed
-    }
-    todo.editing = false;
-    if (this.documentClickListener) {
-      this.documentClickListener();
-      this.documentClickListener = null;
-    }
+    this.cancelEdit(todo); // Revert changes using cancelEdit
   }
 
   cancelEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
     console.log('cancelEdit called with todo:', todo);
+    const originalTodo = this.todos.find(t => t.id === todo.id);
+    if (originalTodo) {
+      todo.text = originalTodo.text; // Revert text if it was changed
+    }
     todo.editing = false;
     if (this.documentClickListener) {
       this.documentClickListener();
