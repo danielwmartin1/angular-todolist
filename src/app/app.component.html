@@ -26,6 +26,7 @@
         <section class="todo-details" *ngIf="!todo.editing">        
           <p class="todo-date">Created: {{ todo.createdAt | date:'short' }}</p>
           <p class="todo-date">Updated: {{ todo.updatedAt | date:'short' }}</p>
+          <p class="todo-date" *ngIf="todo.completed">Completed: {{ todo.completed ? (todo.updatedAt | date:'short') : 'Not completed' }}</p>
         </section>
         <section class="todo-actions">
             <button id="editButton-{{todo.id}}" class="editButton" type="button" (click)="editTodoText(todo, editInput)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
