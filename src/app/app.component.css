@@ -292,43 +292,4 @@ input {
   }
 }
 
-@media (min-width: 601px) and (max-width: 1024px) {
-  .todo-list li {
-    padding: 0.4rem;
-  }
 
-  .todo-list .addButton, .editButton, .removeButton {
-    width: 5rem;
-    padding: 0.4rem;
-    margin: 0.4rem;
-  }
-
-  .toolbar, footer, header {
-    padding: 0.75rem;
-    font-size: 1rem;
-  }
-
-  h1 {
-    font-size: 2rem;
-    margin: 0.75rem;
-  }
-
-  input {
-    padding: 0.4rem;
-    margin: 0.4rem;
-    font-size: 1rem;
-  }
-
-  form {
-    margin: 0.75rem auto;
-  }
-
-  .todo-text {
-    font-size: 1.0925rem; /* Increased by 15% */
-  }
-
-  .todo-details {
-    font-size: 0.8075rem; /* Decreased by 15% */
-    padding-left: 1.75rem;
-  }
-}

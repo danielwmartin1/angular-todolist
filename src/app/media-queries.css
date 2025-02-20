@@ -17,7 +17,7 @@
     margin: 0.5rem;
   }
 
-  input, button {
+  input {
     padding: 0.3rem;
     margin: 0.3rem;
     font-size: 0.8rem;
@@ -58,7 +58,7 @@
     margin: 0.5rem;
   }
 
-  input, button {
+  input {
     padding: 0.3rem;
     margin: 0.3rem;
     font-size: 0.9rem;
@@ -80,7 +80,7 @@
 
 @media (max-width: 768px) {
   button, .addButton, .removeButton, .editButton, .updateButton {
-    font-size: 0.8rem; /* Make button text more responsive */
+    font-size: 1rem; /* Ensure consistent font-size */
   }
 }
 
@@ -105,7 +105,7 @@
     margin: 0.75rem;
   }
 
-  input, button {
+  input {
     padding: 0.4rem;
     margin: 0.4rem;
     font-size: 1rem;
