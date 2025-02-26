@@ -10,11 +10,13 @@
 
 <body class="content" role="main">
   <div class="main-container">
+    <!-- Form for adding new todo -->
     <form (submit)="addTodo()" #todoForm="ngForm">
-      <!-- Input for adding new todo -->
       <input type="text" [(ngModel)]="newTodo" placeholder="Add a new todo" name="todo" required #todoInput />
       <button class="addButton" type="submit" [disabled]="todoForm.invalid">Add</button>
     </form>
+
+    <!-- List of todos -->
     <ul class="todo-list scrollable">
       <li class="listItem" *ngFor="let todo of todos" [class.completed]="todo.completed" [ngClass]="{'editing': todo.editing}">
         <label *ngIf="!todo.editing">
@@ -27,14 +29,15 @@
         </section>
         <!-- Input for editing todo text -->
         <input #editInput *ngIf="todo.editing" [(ngModel)]="todo.text" (blur)="exitEdit(todo)" (keyup.enter)="exitEdit(todo)" (keyup.esc)="cancelEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
-        <section class="todo-details" *ngIf="!todo.editing">        
+        <section class="todo-details" *ngIf="!todo.editing">
+          <!-- Display todo creation and update dates -->
           <p class="todo-date">Created: {{ todo.createdAt | date:'short' }}</p>
           <p class="todo-date">Updated: {{ todo.updatedAt | date:'short' }}</p>
           <p class="todo-date" *ngIf="todo.completed">Completed: {{ todo.completed ? (todo.updatedAt | date:'short') : 'Not completed' }}</p>
         </section>
         <section class="todo-actions">
           <!-- Call updateTodoText if originalText is not equal to todo.text, otherwise call cancelEdit -->
-          <button id="editButton-{{todo.id}}" class="editButton" type="button" (click)="todo.editing ? (todo.text !== todo.originalText ? updateTodoText(todo, true) : cancelEdit(todo)) : editTodoText(todo, editInput)" (mousedown)="preventBlur($event)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
+          <button *ngIf="!todo.completed" id="editButton-{{todo.id}}" class="editButton" type="button" (click)="todo.editing ? (todo.text !== todo.originalText ? updateTodoText(todo, true) : cancelEdit(todo)) : editTodoText(todo, editInput)" (mousedown)="preventBlur($event)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
             {{ todo.editing ? 'Update' : 'Edit' }}
           </button>
           <!-- Delete button -->
