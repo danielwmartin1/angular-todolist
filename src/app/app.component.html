@@ -10,13 +10,14 @@
 
 <body class="content" role="main">
   <div class="main-container">
-    <form (submit)="addTodo()" #todoForm="ngForm">
+    <form (submit)="addTodo(); $event.preventDefault();" #todoForm="ngForm">
       <!-- Input for adding new todo -->
-      <input type="text" [(ngModel)]="newTodo" placeholder="Add a new todo" name="todo" required #todoInput />
+      <input type="text" [(ngModel)]="newTodo" (ngModelChange)="showEmptyTodoWarning = false" placeholder="Add a new todo" name="todo" required #todoInput />
+      <!-- Warning message for invalid input -->
       <div *ngIf="showEmptyTodoWarning" class="warning">Please enter a todo.</div>
-      <div *ngIf="showEmptyTodoWarning">{{ showEmptyTodoWarning }}</div> <!-- Debugging line -->
-      <button class="addButton" type="submit" [disabled]="todoForm.invalid">Add</button>
+      <button class="addButton" type="submit">Add</button>
     </form>
+    <!-- List of todos -->
     <ul class="todo-list scrollable">
       <li class="listItem" *ngFor="let todo of todos" [class.completed]="todo.completed" [ngClass]="{'editing': todo.editing}">
         <label *ngIf="!todo.editing">
@@ -30,6 +31,7 @@
         <!-- Input for editing todo text -->
         <input #editInput *ngIf="todo.editing" [(ngModel)]="todo.text" (blur)="exitEdit(todo)" (keyup.enter)="exitEdit(todo)" (keyup.esc)="cancelEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
         <section class="todo-details" *ngIf="!todo.editing">        
+          <!-- Display todo creation and update dates -->
           <p class="todo-date">Created: {{ todo.createdAt | date:'short' }}</p>
           <p class="todo-date">Updated: {{ todo.updatedAt | date:'short' }}</p>
           <p class="todo-date" *ngIf="todo.completed">Completed: {{ todo.completed ? (todo.updatedAt | date:'short') : 'Not completed' }}</p>
