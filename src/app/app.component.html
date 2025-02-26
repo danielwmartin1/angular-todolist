@@ -29,9 +29,9 @@
           <p class="todo-date" *ngIf="todo.completed">Completed: {{ todo.completed ? (todo.updatedAt | date:'short') : 'Not completed' }}</p>
         </section>
         <section class="todo-actions">
-            <button id="editButton-{{todo.id}}" class="editButton" type="button" (click)="editTodoText(todo, editInput)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
+          <button id="editButton-{{todo.id}}" class="editButton" type="button" (click)="todo.editing ? updateTodoText(todo, true) : editTodoText(todo, editInput)" (mousedown)="preventBlur($event)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
             {{ todo.editing ? 'Update' : 'Edit' }}
-            </button>
+          </button>
           <button class="removeButton" type="button" (click)="removeTodo(todo)" *ngIf="!todo.editing">Remove</button>
         </section>
       </li>
