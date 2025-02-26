@@ -16,6 +16,11 @@ if (environment.production) {
   enableProdMode();
 }
 
+/**
+ * AppComponent is the root component of the Angular Todo List application.
+ * It manages the state and behavior of the todo list, including fetching,
+ * adding, updating, and removing todos.
+ */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -120,7 +125,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     } else {
       this.showEmptyTodoWarning = true; // Show warning if input is empty
-      console.log('Warning: Please enter a todo.'); // Log for debugging
+      console.log('Warning: Please enter a todo.');
     }
   }
 
