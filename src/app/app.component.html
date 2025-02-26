@@ -1,18 +1,19 @@
 <!-- Toolbar -->
 <header class="toolbar" role="banner">
   <img
+    class="logo"
     width="50"
     alt="Angular Logo"
     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="
   />
-  <span>Todo List</span>
+  <span class="title">Todo List</span>
 </header>
 
 <body class="content" role="main">
   <div class="main-container">
-    <form (submit)="addTodo(); $event.preventDefault();" #todoForm="ngForm">
+    <form class="todo-form" (submit)="addTodo(); $event.preventDefault();" #todoForm="ngForm">
       <!-- Input for adding new todo -->
-      <input type="text" [(ngModel)]="newTodo" (ngModelChange)="showEmptyTodoWarning = false" placeholder="Add a new todo" name="todo" required #todoInput />
+      <input type="text" class="todo-input" [(ngModel)]="newTodo" (ngModelChange)="showEmptyTodoWarning = false" placeholder="Add a new todo" name="todo" required #todoInput />
       <!-- Warning message for invalid input -->
       <div *ngIf="showEmptyTodoWarning" class="warning">Please enter a todo.</div>
       <button class="addButton" type="submit">Add</button>
@@ -20,7 +21,7 @@
     <!-- List of todos -->
     <ul class="todo-list scrollable">
       <li class="listItem" *ngFor="let todo of todos" [class.completed]="todo.completed" [ngClass]="{'editing': todo.editing}">
-        <label *ngIf="!todo.editing">
+        <label *ngIf="!todo.editing" class="todo-checkbox">
           <!-- Toggle completion checkbox -->
           <input type="checkbox" [(ngModel)]="todo.completed" (change)="toggleTodoCompletion(todo)" title="Mark as completed" />
         </label>
@@ -29,7 +30,7 @@
           <p *ngIf="!todo.editing" class="todo-text">{{ todo.text }}</p>
         </section>
         <!-- Input for editing todo text -->
-        <input #editInput *ngIf="todo.editing" [(ngModel)]="todo.text" (blur)="exitEdit(todo)" (keyup.enter)="exitEdit(todo)" (keyup.esc)="cancelEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
+        <input #editInput *ngIf="todo.editing" class="edit-input" [(ngModel)]="todo.text" (blur)="exitEdit(todo)" (keyup.enter)="exitEdit(todo)" (keyup.esc)="cancelEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
         <section class="todo-details" *ngIf="!todo.editing">        
           <!-- Display todo creation and update dates -->
           <p class="todo-date">Created: {{ todo.createdAt | date:'short' }}</p>
