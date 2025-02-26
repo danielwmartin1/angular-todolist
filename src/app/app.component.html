@@ -13,6 +13,8 @@
     <form (submit)="addTodo()" #todoForm="ngForm">
       <!-- Input for adding new todo -->
       <input type="text" [(ngModel)]="newTodo" placeholder="Add a new todo" name="todo" required #todoInput />
+      <div *ngIf="showEmptyTodoWarning" class="warning">Please enter a todo.</div>
+      <div *ngIf="showEmptyTodoWarning">{{ showEmptyTodoWarning }}</div> <!-- Debugging line -->
       <button class="addButton" type="submit" [disabled]="todoForm.invalid">Add</button>
     </form>
     <ul class="todo-list scrollable">

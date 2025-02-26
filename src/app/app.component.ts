@@ -27,6 +27,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }[] = [];
   currentYear: number = new Date().getFullYear(); // Current year for footer
   private originalNewTodo = ''; // Store the original newTodo text
+  showEmptyTodoWarning = false; // New property to control the warning message
+  isClickOutside = false; // New property to track if the blur event was triggered by clicking outside
 
   @ViewChild('editInput', { static: false }) editInput!: ElementRef; // Reference to the input element for editing
   @ViewChild('todoInput', { static: false }) todoInput!: ElementRef; // Reference to the addTodo input element
@@ -91,6 +93,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log('addTodo called with newTodo:', this.newTodo);
     this.newTodo = this.newTodo.trim(); // Trim the text input
     if (this.newTodo) {
+      this.showEmptyTodoWarning = false; // Hide warning if input is not empty
       try {
         const { data, error } = await supabase
           .from('todos')
@@ -109,6 +112,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       } catch (error) {
         console.error('Error adding todo:', error);
       }
+    } else {
+      this.showEmptyTodoWarning = true; // Show warning if input is empty
+      console.log('Warning: Please enter a todo.'); // Log for debugging
     }
   }
 
@@ -211,6 +217,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.documentClickListener = this.renderer.listen('document', 'click', (event: Event) => {
       if (!this.el.nativeElement.contains(event.target)) {
+        this.isClickOutside = true; // Set the flag if clicked outside
         this.exitEdit(todo);
       }
     });
@@ -218,6 +225,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }) {
     console.log('exitEdit called with todo:', todo);
+    if (this.isClickOutside) {
+      this.isClickOutside = false; // Reset the flag and do not update the UI
+      todo.editing = false; // Exit edit mode without updating
+      return;
+    }
     const originalTodo = this.todos.find(t => t.id === todo.id);
     if (originalTodo && originalTodo.text !== todo.text) {
       this.updateTodoText(todo, true); // Update changes using updateTodoText

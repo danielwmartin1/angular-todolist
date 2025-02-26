@@ -211,6 +211,12 @@ input::placeholder {
   box-sizing: border-box;
 }
 
+.warning {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
 @media (max-width: 480px) {
   .todo-list li {
     padding: 0.3rem;
