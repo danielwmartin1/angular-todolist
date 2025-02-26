@@ -189,7 +189,7 @@ export class AppComponent implements OnInit {
 
   exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
     console.log('exitEdit called with todo:', todo);
-    this.cancelEdit(todo); // Revert changes using cancelEdit
+    this.updateTodoText(todo, true); // Update changes using updateTodoText
   }
 
   cancelEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
