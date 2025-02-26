@@ -38,7 +38,7 @@
         </section>
         <section class="todo-actions">
           <!-- Call updateTodoText if originalText is not equal to todo.text, otherwise call cancelEdit -->
-          <button id="editButton-{{todo.id}}" class="editButton" type="button" (click)="todo.editing ? (todo.text !== todo.originalText ? updateTodoText(todo, true) : cancelEdit(todo)) : editTodoText(todo, editInput)" (mousedown)="preventBlur($event)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
+          <button *ngIf="!todo.completed" id="editButton-{{todo.id}}" class="editButton" type="button" (click)="todo.editing ? (todo.text !== todo.originalText ? updateTodoText(todo, true) : cancelEdit(todo)) : editTodoText(todo, editInput)" (mousedown)="preventBlur($event)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
             {{ todo.editing ? 'Update' : 'Edit' }}
           </button>
           <!-- Delete button -->
