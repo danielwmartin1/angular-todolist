@@ -200,7 +200,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   sortTodos() {
-    this.todos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()); // Sort todos by updatedAt in descending order
+    this.todos.sort((a, b) => b.id - a.id); // Sort todos by id in descending order
   }
 }
 
