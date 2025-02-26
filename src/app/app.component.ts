@@ -26,6 +26,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   newTodo = ''; // New todo text input
   todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }[] = [];
   currentYear: number = new Date().getFullYear(); // Current year for footer
+  private originalNewTodo = ''; // Store the original newTodo text
 
   @ViewChild('editInput', { static: false }) editInput!: ElementRef; // Reference to the input element for editing
   @ViewChild('todoInput', { static: false }) todoInput!: ElementRef; // Reference to the addTodo input element
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.focusAddTodoInput(); // Focus on the addTodo input element after view initialization
+    this.setupDocumentClickListener(); // Setup document click listener to handle blur
   }
 
   private focusAddTodoInput() {
@@ -52,8 +54,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
+  private setupDocumentClickListener() {
+    this.documentClickListener = this.renderer.listen('document', 'click', (event: Event) => {
+      if (this.todoInput && !this.el.nativeElement.contains(event.target)) {
+        this.newTodo = ''; // Revert the state of the addTodo input element to blank
+        this.todoInput.nativeElement.blur(); // Blur the addTodo input element
+      }
+    });
+  }
+
   async fetchTodos() {
-    console.log('fetchTodos called');
     try {
       const { data: todos, error } = await supabase
         .from('todos')
