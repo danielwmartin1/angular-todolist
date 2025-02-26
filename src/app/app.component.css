@@ -110,11 +110,6 @@ form {
   align-items: flex-end;
 }
 
-.completed {
-  color: gray;
-  opacity: 0.6;
-}
-
 .content {
   flex: 1;
   display: flex;
