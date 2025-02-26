@@ -22,7 +22,7 @@ if (environment.production) {
 export class AppComponent implements OnInit {
   title = 'angular-todolist';
   newTodo = '';
-  todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }[] = [];
+  todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }[] = [];
   currentYear: number = new Date().getFullYear();
 
   @ViewChild('editInput') editInput!: ElementRef;
@@ -52,7 +52,8 @@ export class AppComponent implements OnInit {
           completed: todo.completed || false,
           createdAt: todo.createdAt || new Date().toISOString(),
           updatedAt: todo.updatedAt || new Date().toISOString(),
-          completedAt: todo.completed ? todo.updatedAt : undefined
+          completedAt: todo.completed ? todo.updatedAt : undefined,
+          originalText: todo.text // Store the original text
         }));
         console.log('Fetched todos:', this.todos);
       }
@@ -74,7 +75,7 @@ export class AppComponent implements OnInit {
           console.error('Error adding todo:', error);
         } else {
           const newTodo = data[0];
-          this.todos.push({ ...newTodo, editing: false });
+          this.todos.push({ ...newTodo, editing: false, originalText: newTodo.text });
           this.sortTodos();
           this.newTodo = '';
           console.log('Todo added:', this.todos);
@@ -85,12 +86,13 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }, updateTimestamp: boolean = false) {
+  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }, updateTimestamp: boolean = false) {
     console.log('updateTodoText called with todo:', todo);
     todo.editing = false;
     todo.text = todo.text.trim(); // Trim the text input
     const originalTodo = this.todos.find(t => t.id === todo.id);
     if (originalTodo && originalTodo.text === todo.text && !updateTimestamp) {
+      this.cancelEdit(todo); // Cancel edit if text is unchanged
       return;
     }
     const newUpdatedAt = new Date().toISOString();
@@ -163,12 +165,13 @@ export class AppComponent implements OnInit {
     }
   }
 
-  editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }, inputElement: ElementRef | null) {
+  editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }, inputElement: ElementRef | null) {
     if (todo.completed) {
       console.log('Cannot edit a completed todo.');
       return;
     }
     console.log('editTodoText called with todo:', todo);
+    todo.originalText = todo.text; // Store the original text
     todo.editing = true;
     setTimeout(() => {
       if (inputElement) {
@@ -187,12 +190,17 @@ export class AppComponent implements OnInit {
     });
   }
 
-  exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
+  exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }) {
     console.log('exitEdit called with todo:', todo);
-    this.updateTodoText(todo, true); // Update changes using updateTodoText
+    const originalTodo = this.todos.find(t => t.id === todo.id);
+    if (originalTodo && originalTodo.text !== todo.text) {
+      this.updateTodoText(todo, true); // Update changes using updateTodoText
+    } else {
+      this.cancelEdit(todo); // Revert changes using cancelEdit
+    }
   }
 
-  cancelEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
+  cancelEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }) {
     console.log('cancelEdit called with todo:', todo);
     const originalTodo = this.todos.find(t => t.id === todo.id);
     if (originalTodo) {
