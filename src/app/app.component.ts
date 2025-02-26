@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }[] = [];
   currentYear: number = new Date().getFullYear();
 
-  @ViewChild('editInput') editInput!: ElementRef;
+  @ViewChild('editInput', { static: false }) editInput!: ElementRef;
   private documentClickListener: (() => void) | null = null;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
@@ -174,8 +174,8 @@ export class AppComponent implements OnInit {
     todo.originalText = todo.text; // Store the original text
     todo.editing = true;
     setTimeout(() => {
-      if (inputElement) {
-        inputElement.nativeElement.focus();
+      if (this.editInput) {
+        this.editInput.nativeElement.focus(); // Focus on the input element
       }
     }, 0);
 
