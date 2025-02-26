@@ -44,21 +44,26 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log('ngAfterViewInit called');
     this.focusAddTodoInput(); // Focus on the addTodo input element after view initialization
     this.setupDocumentClickListener(); // Setup document click listener to handle blur
   }
 
   private focusAddTodoInput() {
+    console.log('focusAddTodoInput called');
     setTimeout(() => {
       if (this.todoInput && this.todoInput.nativeElement) {
+        console.log('Focusing on addTodo input element');
         this.todoInput.nativeElement.focus(); // Focus on the addTodo input element
       }
     }, 0);
   }
 
   private setupDocumentClickListener() {
+    console.log('setupDocumentClickListener called');
     this.documentClickListener = this.renderer.listen('document', 'click', (event: Event) => {
       if (this.todoInput && !this.el.nativeElement.contains(event.target)) {
+        console.log('Clicked outside addTodo input element');
         this.newTodo = ''; // Revert the state of the addTodo input element to blank
         this.todoInput.nativeElement.blur(); // Blur the addTodo input element
       }
@@ -66,6 +71,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   async fetchTodos() {
+    console.log('fetchTodos called');
     try {
       const { data: todos, error } = await supabase
         .from('todos')
@@ -124,6 +130,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     todo.text = todo.text.trim(); // Trim the text input
     const originalTodo = this.todos.find(t => t.id === todo.id);
     if (originalTodo && originalTodo.text === todo.text && !updateTimestamp) {
+      console.log('Text unchanged, canceling edit');
       this.cancelEdit(todo); // Cancel edit if text is unchanged
       return;
     }
@@ -207,6 +214,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     todo.editing = true;
     setTimeout(() => {
       if (this.editInput) {
+        console.log('Focusing on edit input element');
         this.editInput.nativeElement.focus(); // Focus on the input element
       }
     }, 0);
@@ -217,6 +225,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.documentClickListener = this.renderer.listen('document', 'click', (event: Event) => {
       if (!this.el.nativeElement.contains(event.target)) {
+        console.log('Clicked outside edit input element');
         this.isClickOutside = true; // Set the flag if clicked outside
         this.exitEdit(todo);
       }
@@ -227,14 +236,17 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log('exitEdit called with todo:', todo);
     todo.text = todo.originalText || ''; // Revert text to original, provide default value
     if (this.isClickOutside) {
+      console.log('Exiting edit mode due to outside click');
       this.isClickOutside = false; // Reset the flag and do not update the UI
       this.cancelEdit(todo); // Call cancelEdit to revert changes
       return;
     }
     const originalTodo = this.todos.find(t => t.id === todo.id);
     if (originalTodo && originalTodo.text !== todo.text) {
+      console.log('Text changed, updating todo');
       this.updateTodoText(todo, true); // Update changes using updateTodoText
     } else {
+      console.log('Text unchanged, canceling edit');
       this.cancelEdit(todo); // Revert changes using cancelEdit
     }
   }
@@ -253,10 +265,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   preventBlur(event: MouseEvent) {
+    console.log('preventBlur called');
     event.preventDefault();
   }
 
   sortTodos() {
+    console.log('sortTodos called');
     this.todos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()); // Sort todos by updatedAt in descending order
   }
 }

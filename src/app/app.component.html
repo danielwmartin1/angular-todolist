@@ -12,9 +12,8 @@
   <div class="main-container">
     <form (submit)="addTodo()" #todoForm="ngForm">
       <!-- Input for adding new todo -->
-      <input type="text" [(ngModel)]="newTodo" placeholder="Add a new todo" name="todo" required #todoInput />
-      <div *ngIf="showEmptyTodoWarning" class="warning">Please enter a todo.</div>
-      <div *ngIf="showEmptyTodoWarning">{{ showEmptyTodoWarning }}</div> <!-- Debugging line -->
+      <input type="text" [(ngModel)]="newTodo" placeholder="Add a new todo" name="todo" required #todoInput="ngModel" />
+      <div *ngIf="todoInput.invalid && (todoInput.dirty || todoInput.touched)" class="warning">Please enter a todo.</div>
       <button class="addButton" type="submit" [disabled]="todoForm.invalid">Add</button>
     </form>
     <ul class="todo-list scrollable">
