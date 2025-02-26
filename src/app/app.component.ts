@@ -1,15 +1,7 @@
 import { Component, OnInit, ElementRef, Renderer2, ViewChild, AfterViewInit } from '@angular/core';
-import { createClient } from '@supabase/supabase-js';
+import { TodoService } from './services/todo.service';
 import { enableProdMode } from '@angular/core';
 import { environment } from '../environments/environment';
-
-// Initialize Supabase client
-const supabaseUrl = 'https://afhmppsklvgzzqlipkki.supabase.co';
-const supabaseKey = environment.SUPABASE_KEY;
-if (!supabaseKey) {
-  throw new Error('Supabase key is not defined. Please check your environment variables.');
-}
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Enable production mode if environment is set to production
 if (environment.production) {
@@ -32,7 +24,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('todoInput', { static: false }) todoInput!: ElementRef; // Reference to the addTodo input element
   private documentClickListener: (() => void) | null = null; // Listener for document clicks
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {
+  constructor(private el: ElementRef, private renderer: Renderer2, private todoService: TodoService) {
     console.log('AppComponent initialized');
   }
 
@@ -65,23 +57,16 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   async fetchTodos() {
     try {
-      const { data: todos, error } = await supabase
-        .from('todos')
-        .select('*')
-        .order('updatedAt', { ascending: false }); // Sort by updatedAt in descending order
-      if (error) {
-        console.error('Error fetching todos:', error);
-      } else {
-        this.todos = todos.map(todo => ({
-          ...todo,
-          completed: todo.completed || false,
-          createdAt: todo.createdAt || new Date().toISOString(),
-          updatedAt: todo.updatedAt || new Date().toISOString(),
-          completedAt: todo.completed ? todo.updatedAt : undefined,
-          originalText: todo.text // Store the original text
-        }));
-        console.log('Fetched todos:', this.todos);
-      }
+      const todos = await this.todoService.fetchTodos();
+      this.todos = todos.map(todo => ({
+        ...todo,
+        completed: todo.completed || false,
+        createdAt: todo.createdAt || new Date().toISOString(),
+        updatedAt: todo.updatedAt || new Date().toISOString(),
+        completedAt: todo.completed ? todo.updatedAt : undefined,
+        originalText: todo.text // Store the original text
+      }));
+      console.log('Fetched todos:', this.todos);
     } catch (error) {
       console.error('Error fetching todos:', error);
     }
@@ -92,20 +77,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.newTodo = this.newTodo.trim(); // Trim the text input
     if (this.newTodo) {
       try {
-        const { data, error } = await supabase
-          .from('todos')
-          .insert([{ text: this.newTodo, completed: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }])
-          .select(); // Select the inserted row to get the id
-        if (error) {
-          console.error('Error adding todo:', error);
-        } else {
-          const newTodo = data[0];
-          this.todos.push({ ...newTodo, editing: false, originalText: newTodo.text });
-          this.sortTodos(); // Sort todos after adding a new one
-          this.newTodo = ''; // Clear the input field
-          this.focusAddTodoInput(); // Focus on the addTodo input element
-          console.log('Todo added:', this.todos);
-        }
+        const newTodo = await this.todoService.addTodo(this.newTodo);
+        this.todos.push({ ...newTodo, editing: false, originalText: newTodo.text });
+        this.sortTodos(); // Sort todos after adding a new one
+        this.newTodo = ''; // Clear the input field
+        this.focusAddTodoInput(); // Focus on the addTodo input element
+        console.log('Todo added:', this.todos);
       } catch (error) {
         console.error('Error adding todo:', error);
       }
@@ -128,25 +105,17 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.todos = this.todos.map(t => t.id === todo.id ? { ...t, text: todo.text, updatedAt: newUpdatedAt } : t); // Trigger change detection
     this.sortTodos(); // Sort todos immediately after updating the date
     try {
-      const { data, error } = await supabase
-        .from('todos')
-        .update({ text: todo.text, updatedAt: newUpdatedAt }) // Update text and updatedAt
-        .eq('id', todo.id)
-        .select(); // Use id instead of createdAt
-      if (error) {
-        console.error('Error updating todo text:', error);
-      } else {
-        if (data && data.length > 0) {
-          const updatedTodo = this.todos.find(t => t.id === todo.id);
-          if (updatedTodo) {
-            updatedTodo.text = todo.text;
-            updatedTodo.updatedAt = newUpdatedAt;
-            this.todos = [...this.todos]; // Trigger change detection
-            console.log('Todo text updated:', updatedTodo);
-          }
-        } else {
-          console.error('No data returned from update query.');
+      const updatedTodo = await this.todoService.updateTodoText(todo.id, todo.text, newUpdatedAt);
+      if (updatedTodo) {
+        const todoToUpdate = this.todos.find(t => t.id === todo.id);
+        if (todoToUpdate) {
+          todoToUpdate.text = updatedTodo.text;
+          todoToUpdate.updatedAt = updatedTodo.updatedAt;
+          this.todos = [...this.todos]; // Trigger change detection
+          console.log('Todo text updated:', todoToUpdate);
         }
+      } else {
+        console.error('No data returned from update query.');
       }
     } catch (error) {
       console.error('Error updating todo text:', error);
@@ -156,17 +125,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   async removeTodo(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
     console.log('removeTodo called with todo:', todo);
     try {
-      const { error } = await supabase
-        .from('todos')
-        .delete()
-        .eq('id', todo.id); // Use id instead of text
-      if (error) {
-        console.error('Error removing todo:', error);
-      } else {
-        this.todos = this.todos.filter(t => t.id !== todo.id);
-        this.sortTodos(); // Sort todos after removing one
-        console.log('Todo removed:', this.todos);
-      }
+      await this.todoService.removeTodo(todo.id);
+      this.todos = this.todos.filter(t => t.id !== todo.id);
+      this.sortTodos(); // Sort todos after removing one
+      console.log('Todo removed:', this.todos);
     } catch (error) {
       console.error('Error removing todo:', error);
     }
@@ -175,17 +137,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   async toggleTodoCompletion(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
     console.log('toggleTodoCompletion called with todo:', todo);
     try {
-      const { error } = await supabase
-        .from('todos')
-        .update({ completed: todo.completed, updatedAt: new Date().toISOString() })
-        .eq('id', todo.id); // Use id instead of text
-      if (error) {
-        console.error('Error updating todo:', error);
-      } else {
-        todo.updatedAt = new Date().toISOString();
-        this.sortTodos(); // Sort todos after toggling completion
-        console.log('Todo completion toggled:', todo);
-      }
+      const newUpdatedAt = new Date().toISOString();
+      await this.todoService.toggleTodoCompletion(todo.id, todo.completed, newUpdatedAt);
+      todo.updatedAt = newUpdatedAt;
+      this.sortTodos(); // Sort todos after toggling completion
+      console.log('Todo completion toggled:', todo);
     } catch (error) {
       console.error('Error updating todo:', error);
     }
