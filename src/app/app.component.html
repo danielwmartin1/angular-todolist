@@ -12,7 +12,7 @@
   <div class="main-container">
     <form (submit)="addTodo()" #todoForm="ngForm">
       <!-- Input for adding new todo -->
-      <input type="text" [(ngModel)]="newTodo" placeholder="Add a new todo" name="todo" required #todoInput="ngModel" />
+      <input type="text" [(ngModel)]="newTodo" placeholder="Add a new todo" name="todo" required #todoInput />
       <button class="addButton" type="submit" [disabled]="todoForm.invalid">Add</button>
     </form>
     <ul class="todo-list scrollable">

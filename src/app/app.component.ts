@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, Renderer2, ViewChild, AfterViewInit } from '@angular/core';
 import { createClient } from '@supabase/supabase-js';
 import { enableProdMode } from '@angular/core';
 import { environment } from '../environments/environment';
@@ -21,13 +21,14 @@ if (environment.production) {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'angular-todolist';
   newTodo = ''; // New todo text input
   todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }[] = [];
   currentYear: number = new Date().getFullYear(); // Current year for footer
 
   @ViewChild('editInput', { static: false }) editInput!: ElementRef; // Reference to the input element for editing
+  @ViewChild('todoInput', { static: false }) todoInput!: ElementRef; // Reference to the addTodo input element
   private documentClickListener: (() => void) | null = null; // Listener for document clicks
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
@@ -37,6 +38,18 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     console.log('ngOnInit called');
     await this.fetchTodos(); // Fetch todos on component initialization
+  }
+
+  ngAfterViewInit() {
+    this.focusAddTodoInput(); // Focus on the addTodo input element after view initialization
+  }
+
+  private focusAddTodoInput() {
+    setTimeout(() => {
+      if (this.todoInput && this.todoInput.nativeElement) {
+        this.todoInput.nativeElement.focus(); // Focus on the addTodo input element
+      }
+    }, 0);
   }
 
   async fetchTodos() {
@@ -80,6 +93,7 @@ export class AppComponent implements OnInit {
           this.todos.push({ ...newTodo, editing: false, originalText: newTodo.text });
           this.sortTodos(); // Sort todos after adding a new one
           this.newTodo = ''; // Clear the input field
+          this.focusAddTodoInput(); // Focus on the addTodo input element
           console.log('Todo added:', this.todos);
         }
       } catch (error) {
