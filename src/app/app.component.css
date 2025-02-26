@@ -111,7 +111,6 @@ form {
 }
 
 .completed {
-  text-decoration: line-through;
   color: gray;
   opacity: 0.6;
 }
