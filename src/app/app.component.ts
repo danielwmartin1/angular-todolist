@@ -16,11 +16,6 @@ if (environment.production) {
   enableProdMode();
 }
 
-/**
- * AppComponent is the root component of the Angular Todo List application.
- * It manages the state and behavior of the todo list, including fetching,
- * adding, updating, and removing todos.
- */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -32,8 +27,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }[] = [];
   currentYear: number = new Date().getFullYear(); // Current year for footer
   private originalNewTodo = ''; // Store the original newTodo text
-  showEmptyTodoWarning = false; // New property to control the warning message
-  isClickOutside = false; // New property to track if the blur event was triggered by clicking outside
 
   @ViewChild('editInput', { static: false }) editInput!: ElementRef; // Reference to the input element for editing
   @ViewChild('todoInput', { static: false }) todoInput!: ElementRef; // Reference to the addTodo input element
@@ -43,28 +36,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log('AppComponent initialized');
   }
 
-  /**
-   * Lifecycle hook that is called after Angular has initialized all data-bound properties.
-   * Fetches todos from the database.
-   */
   async ngOnInit() {
     console.log('ngOnInit called');
     await this.fetchTodos(); // Fetch todos on component initialization
   }
 
-  /**
-   * Lifecycle hook that is called after Angular has fully initialized a component's view.
-   * Focuses on the addTodo input element and sets up a document click listener.
-   */
   ngAfterViewInit() {
     this.focusAddTodoInput(); // Focus on the addTodo input element after view initialization
     this.setupDocumentClickListener(); // Setup document click listener to handle blur
   }
 
-  /**
-   * Focuses on the addTodo input element.
-   * Uses setTimeout to ensure the focus is set after the view has been initialized.
-   */
   private focusAddTodoInput() {
     setTimeout(() => {
       if (this.todoInput && this.todoInput.nativeElement) {
@@ -73,10 +54,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  /**
-   * Sets up a document click listener to handle clicks outside the addTodo input element.
-   * If a click is detected outside the input, the input is blurred and its value is cleared.
-   */
   private setupDocumentClickListener() {
     this.documentClickListener = this.renderer.listen('document', 'click', (event: Event) => {
       if (this.todoInput && !this.el.nativeElement.contains(event.target)) {
@@ -86,10 +63,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /**
-   * Fetches todos from the database and updates the component's state.
-   * Sorts the todos by updatedAt in descending order.
-   */
   async fetchTodos() {
     try {
       const { data: todos, error } = await supabase
@@ -114,15 +87,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Adds a new todo to the database and updates the component's state.
-   * If the input is empty, shows a warning message.
-   */
   async addTodo() {
     console.log('addTodo called with newTodo:', this.newTodo);
     this.newTodo = this.newTodo.trim(); // Trim the text input
     if (this.newTodo) {
-      this.showEmptyTodoWarning = false; // Hide warning if input is not empty
       try {
         const { data, error } = await supabase
           .from('todos')
@@ -141,18 +109,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       } catch (error) {
         console.error('Error adding todo:', error);
       }
-    } else {
-      this.showEmptyTodoWarning = true; // Show warning if input is empty
-      console.log('Warning: Please enter a todo.');
     }
   }
 
-  /**
-   * Updates the text of an existing todo in the database and updates the component's state.
-   * If the text is unchanged and updateTimestamp is false, cancels the edit.
-   * @param todo The todo to update.
-   * @param updateTimestamp Whether to update the updatedAt timestamp.
-   */
   async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }, updateTimestamp: boolean = false) {
     console.log('updateTodoText called with todo:', todo);
     todo.editing = false;
@@ -194,10 +153,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Removes a todo from the database and updates the component's state.
-   * @param todo The todo to remove.
-   */
   async removeTodo(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean }) {
     console.log('removeTodo called with todo:', todo);
     try {
@@ -217,10 +172,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Toggles the completion status of a todo in the database and updates the component's state.
-   * @param todo The todo to toggle.
-   */
   async toggleTodoCompletion(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, editing?: boolean }) {
     console.log('toggleTodoCompletion called with todo:', todo);
     try {
@@ -240,12 +191,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Enables editing mode for a todo and focuses on the input element.
-   * Sets up a document click listener to handle clicks outside the input element.
-   * @param todo The todo to edit.
-   * @param inputElement The input element to focus on.
-   */
   editTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }, inputElement: ElementRef | null) {
     if (todo.completed) {
       console.log('Cannot edit a completed todo.');
@@ -266,25 +211,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.documentClickListener = this.renderer.listen('document', 'click', (event: Event) => {
       if (!this.el.nativeElement.contains(event.target)) {
-        this.isClickOutside = true; // Set the flag if clicked outside
         this.exitEdit(todo);
       }
     });
   }
 
-  /**
-   * Exits editing mode for a todo and updates the text if it has changed.
-   * If the text is unchanged, cancels the edit.
-   * @param todo The todo to exit editing mode for.
-   */
   exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }) {
     console.log('exitEdit called with todo:', todo);
-    todo.text = todo.originalText || ''; // Revert text to original, provide default value
-    if (this.isClickOutside) {
-      this.isClickOutside = false; // Reset the flag and do not update the UI
-      this.cancelEdit(todo); // Call cancelEdit to revert changes
-      return;
-    }
     const originalTodo = this.todos.find(t => t.id === todo.id);
     if (originalTodo && originalTodo.text !== todo.text) {
       this.updateTodoText(todo, true); // Update changes using updateTodoText
@@ -293,10 +226,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Cancels editing mode for a todo and reverts the text to its original value.
-   * @param todo The todo to cancel editing mode for.
-   */
   cancelEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }) {
     console.log('cancelEdit called with todo:', todo);
     const originalTodo = this.todos.find(t => t.id === todo.id);
@@ -310,17 +239,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Prevents the blur event from being triggered.
-   * @param event The mouse event to prevent.
-   */
   preventBlur(event: MouseEvent) {
     event.preventDefault();
   }
 
-  /**
-   * Sorts the todos by updatedAt in descending order.
-   */
   sortTodos() {
     this.todos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()); // Sort todos by updatedAt in descending order
   }
