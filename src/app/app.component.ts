@@ -225,9 +225,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }) {
     console.log('exitEdit called with todo:', todo);
+    todo.text = todo.originalText || ''; // Revert text to original, provide default value
     if (this.isClickOutside) {
       this.isClickOutside = false; // Reset the flag and do not update the UI
-      todo.editing = false; // Exit edit mode without updating
+      this.cancelEdit(todo); // Call cancelEdit to revert changes
       return;
     }
     const originalTodo = this.todos.find(t => t.id === todo.id);
