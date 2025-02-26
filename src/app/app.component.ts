@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { enableProdMode } from '@angular/core';
 import { environment } from '../environments/environment';
 
+// Initialize Supabase client
 const supabaseUrl = 'https://afhmppsklvgzzqlipkki.supabase.co';
 const supabaseKey = environment.SUPABASE_KEY;
 if (!supabaseKey) {
@@ -10,6 +11,7 @@ if (!supabaseKey) {
 }
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Enable production mode if environment is set to production
 if (environment.production) {
   enableProdMode();
 }
@@ -21,12 +23,12 @@ if (environment.production) {
 })
 export class AppComponent implements OnInit {
   title = 'angular-todolist';
-  newTodo = '';
+  newTodo = ''; // New todo text input
   todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }[] = [];
-  currentYear: number = new Date().getFullYear();
+  currentYear: number = new Date().getFullYear(); // Current year for footer
 
-  @ViewChild('editInput', { static: false }) editInput!: ElementRef;
-  private documentClickListener: (() => void) | null = null;
+  @ViewChild('editInput', { static: false }) editInput!: ElementRef; // Reference to the input element for editing
+  private documentClickListener: (() => void) | null = null; // Listener for document clicks
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
     console.log('AppComponent initialized');
@@ -34,7 +36,7 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     console.log('ngOnInit called');
-    await this.fetchTodos();
+    await this.fetchTodos(); // Fetch todos on component initialization
   }
 
   async fetchTodos() {
@@ -76,8 +78,8 @@ export class AppComponent implements OnInit {
         } else {
           const newTodo = data[0];
           this.todos.push({ ...newTodo, editing: false, originalText: newTodo.text });
-          this.sortTodos();
-          this.newTodo = '';
+          this.sortTodos(); // Sort todos after adding a new one
+          this.newTodo = ''; // Clear the input field
           console.log('Todo added:', this.todos);
         }
       } catch (error) {
@@ -138,7 +140,7 @@ export class AppComponent implements OnInit {
         console.error('Error removing todo:', error);
       } else {
         this.todos = this.todos.filter(t => t.id !== todo.id);
-        this.sortTodos();
+        this.sortTodos(); // Sort todos after removing one
         console.log('Todo removed:', this.todos);
       }
     } catch (error) {
@@ -157,7 +159,7 @@ export class AppComponent implements OnInit {
         console.error('Error updating todo:', error);
       } else {
         todo.updatedAt = new Date().toISOString();
-        this.sortTodos();
+        this.sortTodos(); // Sort todos after toggling completion
         console.log('Todo completion toggled:', todo);
       }
     } catch (error) {
@@ -218,7 +220,7 @@ export class AppComponent implements OnInit {
   }
 
   sortTodos() {
-    this.todos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+    this.todos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()); // Sort todos by updatedAt in descending order
   }
 }
 
