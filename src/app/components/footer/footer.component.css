@@ -1,0 +1,12 @@
+footer {
+  display: flex;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.25rem;
+  padding: 1rem 0;
+  background-color: #005effcc;
+  color: white;
+  border-top: 5px ridge aqua;
+}
