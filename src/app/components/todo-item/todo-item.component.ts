@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@
 @Component({
   selector: 'app-todo-item',
   templateUrl: './todo-item.component.html',
-  styleUrls: ['./todo-item.component.css']
+  styleUrls: ['./todo-item.component.css'] // Change from .scss to .css
 })
 export class TodoItemComponent {
   @Input() todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string } = {

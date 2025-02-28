@@ -1,0 +1,53 @@
+.listItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.listItem.completed .todo-text,
+.listItem.completed .todo-date {
+  text-decoration: line-through;
+  color: rgb(178, 178, 178);
+}
+
+.listItem.editing {
+  display: grid;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+}
+
+.listItem:hover {
+  background-color: #d6b9b962;
+}
+
+/* Todo text and date styles */
+.todo-text, .todo-date {
+  overflow: visible; /* Ensure overflow is visible */
+  text-overflow: clip; /* Clip text instead of ellipsis */
+  white-space: normal; /* Allow text to wrap */
+}
+
+.todo-text {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 1.15rem; /* Increased by 15% */
+  text-align: left;
+  width: 100%;
+  padding-left: 1rem;
+}
+
+/* Todo actions styles */
+.todo-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
