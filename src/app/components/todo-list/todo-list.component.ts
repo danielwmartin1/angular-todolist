@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-todo-list',
@@ -14,4 +14,6 @@ export class TodoListComponent {
   @Output() updateTodoText = new EventEmitter<any>();
   @Output() removeTodo = new EventEmitter<any>();
   @Output() preventBlur = new EventEmitter<any>();
+
+  @ViewChild('editInput') editInput!: ElementRef;
 }
