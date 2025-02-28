@@ -93,17 +93,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log('updateTodoText called with todo:', todo);
     todo.editing = false;
     todo.text = todo.text.trim(); // Trim the text input
-    const originalTodo = this.todos.find(t => t.id === todo.id);
-    if (originalTodo && originalTodo.text === todo.text && !updateTimestamp) {
-      this.cancelEdit(todo); // Cancel edit if text is unchanged
-      return;
+    if (todo.originalText === todo.text) {
+      console.log('No changes detected, exiting update.');
+      return; // Exit without updating if originalText is equal to todo.text
     }
     const newUpdatedAt = new Date().toISOString();
     if (updateTimestamp) {
       todo.updatedAt = newUpdatedAt; // Update the updatedAt date immediately
     }
-    this.todos = this.todos.map(t => t.id === todo.id ? { ...t, text: todo.text, updatedAt: newUpdatedAt } : t); // Trigger change detection
-    this.sortTodos(); // Sort todos immediately after updating the date
     try {
       const updatedTodo = await this.todoService.updateTodoText(todo.id, todo.text, newUpdatedAt);
       if (updatedTodo) {
@@ -111,7 +108,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (todoToUpdate) {
           todoToUpdate.text = updatedTodo.text;
           todoToUpdate.updatedAt = updatedTodo.updatedAt;
-          this.todos = [...this.todos]; // Trigger change detection
+          this.todos = this.todos.map(t => t.id === todo.id ? todoToUpdate : t); // Trigger change detection
           console.log('Todo text updated:', todoToUpdate);
         }
       } else {
@@ -175,10 +172,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   exitEdit(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }) {
     console.log('exitEdit called with todo:', todo);
     const originalTodo = this.todos.find(t => t.id === todo.id);
-    if (originalTodo && originalTodo.text !== todo.text) {
+    if (originalTodo && originalTodo.text !== todo.originalText) {
       this.updateTodoText(todo, true); // Update changes using updateTodoText
     } else {
-      this.cancelEdit(todo); // Revert changes using cancelEdit
+      todo.editing = false; // Ensure editing is set to false
+      console.log('No changes detected, exiting edit mode.');
     }
   }
 
