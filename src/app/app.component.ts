@@ -88,7 +88,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }, updateTimestamp: boolean = false) {
+  async updateTodoText(todo: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }) {
     console.log('updateTodoText called with todo:', todo); // Log the todo to be updated
     todo.editing = false; // Exit editing mode
     todo.text = todo.text.trim(); // Trim whitespace from the todo text
@@ -96,10 +96,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       console.log('No changes detected, exiting update.'); // Log if no changes are detected
       return;
     }
-    const newUpdatedAt = new Date().toISOString(); // Get the current timestamp
-    if (updateTimestamp) {
-      todo.updatedAt = newUpdatedAt; // Update the updatedAt timestamp if required
-    }
+    const newUpdatedAt = new Date().toLocaleString('en-US', { timeZoneName: 'short' }); // Get the current timestamp
     try {
       const updatedTodo = await this.todoService.updateTodoText(todo.id, todo.text, newUpdatedAt); // Update the todo via the service
       if (updatedTodo) {
@@ -134,7 +131,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log('toggleTodoCompletion called with todo:', todo); // Log the todo to be toggled
     try {
       const newUpdatedAt = new Date().toISOString(); // Get the current timestamp
-      await this.todoService.toggleTodoCompletion(todo.id, todo.completed, newUpdatedAt); // Toggle the completion status via the service
+      await this.todoService.toggleTodoCompletion(todo.id, todo.completed); // Toggle the completion status via the service
       todo.updatedAt = newUpdatedAt; // Update the updatedAt timestamp
       this.sortTodos(); // Sort the todos
       console.log('Todo completion toggled:', todo); // Log the toggled todo
@@ -172,7 +169,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log('exitEdit called with todo:', todo); // Log the todo to exit edit mode
     const originalTodo = this.todos.find(t => t.id === todo.id); // Find the original todo in the list
     if (originalTodo && originalTodo.text !== todo.originalText) {
-      this.updateTodoText(todo, true); // Update the todo text if changes are detected
+      this.updateTodoText(todo); // Update the todo text if changes are detected
     } else {
       todo.editing = false; // Exit editing mode if no changes are detected
       console.log('No changes detected, exiting edit mode.'); // Log if no changes are detected
@@ -198,6 +195,21 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   sortTodos() {
     this.todos.sort((a, b) => b.id - a.id); // Sort the todos by id in descending order
+  }
+
+  formatDateWithTimezone(dateString: string): string {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+      timeZone: 'America/New_York',
+      timeZoneName: 'short'
+    };
+    return new Date(dateString).toLocaleString('en-US', options);
   }
 }
 

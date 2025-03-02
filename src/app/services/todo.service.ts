@@ -29,9 +29,10 @@ export class TodoService {
   }
 
   async addTodo(text: string) {
+    const timestamp = new Date().toLocaleString('en-US', { timeZoneName: 'short' });
     const { data, error } = await this.supabase
       .from('todos')
-      .insert([{ text, completed: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }])
+      .insert([{ text, completed: false, createdAt: timestamp, updatedAt: timestamp }])
       .select();
     if (error) {
       throw error;
@@ -61,10 +62,11 @@ export class TodoService {
     }
   }
 
-  async toggleTodoCompletion(id: number, completed: boolean, updatedAt: string) {
+  async toggleTodoCompletion(id: number, completed: boolean) {
+    const timestamp = new Date().toLocaleString('en-US', { timeZoneName: 'short' });
     const { error } = await this.supabase
       .from('todos')
-      .update({ completed, updatedAt })
+      .update({ completed, updatedAt: timestamp })
       .eq('id', id);
     if (error) {
       throw error;

@@ -31,13 +31,13 @@
         <input #editInput *ngIf="todo.editing" [(ngModel)]="todo.text" (blur)="exitEdit(todo)" (keyup.enter)="exitEdit(todo)" (keyup.esc)="cancelEdit(todo)" title="Edit todo text" placeholder="Edit todo text" />
         <section class="todo-details" *ngIf="!todo.editing">
           <!-- Display todo creation and update dates -->
-          <p class="todo-date">Created: {{ todo.createdAt | date:'short' }}</p>
-          <p class="todo-date">Updated: {{ todo.updatedAt | date:'short' }}</p>
-          <p class="todo-date" *ngIf="todo.completed">Completed: {{ todo.completed ? (todo.updatedAt | date:'short') : 'Not completed' }}</p>
+          <p class="todo-date">Created: {{ formatDateWithTimezone(todo.createdAt) }}</p>
+          <p class="todo-date">Updated: {{ formatDateWithTimezone(todo.updatedAt) }}</p>
+          <p class="todo-date" *ngIf="todo.completed">Completed: {{ todo.completed ? formatDateWithTimezone(todo.updatedAt) : 'Not completed' }}</p>
         </section>
         <section class="todo-actions">
           <!-- Call updateTodoText if originalText is not equal to todo.text, otherwise call cancelEdit -->
-          <button *ngIf="!todo.completed" id="editButton-{{todo.id}}" class="editButton" type="button" (click)="todo.editing ? updateTodoText(todo, true) : editTodoText(todo, editInput)" (mousedown)="preventBlur($event)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
+          <button *ngIf="!todo.completed" id="editButton-{{todo.id}}" class="editButton" type="button" (click)="todo.editing ? updateTodoText(todo) : editTodoText(todo, editInput)" (mousedown)="preventBlur($event)" [ngStyle]="{'background-color': todo.editing ? 'rgba(0, 180, 255, 1.0)' : '', 'width': todo.editing ? '100px' : ''}">
             {{ todo.editing ? 'Update' : 'Edit' }}
           </button>
           <!-- Delete button -->
