@@ -90,6 +90,7 @@ form input[type="text"] {
   overflow: visible; /* Ensure overflow is visible */
   text-overflow: clip; /* Clip text instead of ellipsis */
   white-space: normal; /* Allow text to wrap */
+  font-size: 1.1rem; /* Increased font size */
 }
 
 .todo-text {
