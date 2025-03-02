@@ -14,7 +14,7 @@ if (environment.production) {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  title = 'angular-todolist';
+  title = 'angular-todolist'; // Title of the application
   newTodo = ''; // New todo text input
   todos: { id: number, text: string, completed: boolean, createdAt: string, updatedAt: string, completedAt?: string, editing?: boolean, originalText?: string }[] = [];
   currentYear: number = new Date().getFullYear(); // Current year for footer

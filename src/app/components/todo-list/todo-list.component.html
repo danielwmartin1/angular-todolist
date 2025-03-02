@@ -1,3 +1,14 @@
 <ul class="todo-list scrollable">
-  <app-todo-item *ngFor="let todo of todos" [todo]="todo" (toggleTodoCompletion)="toggleTodoCompletion.emit($event)" (editTodoText)="editTodoText.emit($event)" (exitEdit)="exitEdit.emit($event)" (cancelEdit)="cancelEdit.emit($event)" (updateTodoText)="updateTodoText.emit($event)" (removeTodo)="removeTodo.emit($event)" (preventBlur)="preventBlur.emit($event)"></app-todo-item>
+  <!-- Loop through the todos array and render each todo item using the app-todo-item component -->
+  <app-todo-item 
+    *ngFor="let todo of todos" 
+    [todo]="todo" 
+    (toggleTodoCompletion)="toggleTodoCompletion.emit($event)" 
+    (editTodoText)="editTodoText.emit($event)" 
+    (exitEdit)="exitEdit.emit($event)" 
+    (cancelEdit)="cancelEdit.emit($event)" 
+    (updateTodoText)="updateTodoText.emit($event)" 
+    (removeTodo)="removeTodo.emit($event)" 
+    (preventBlur)="preventBlur.emit($event)">
+  </app-todo-item>
 </ul>
