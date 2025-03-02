@@ -7,7 +7,7 @@ html {
     height: 100vh !important; /* Set the height to 100vh */
     margin: 0;
     padding: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
@@ -20,11 +20,10 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    overflow: hidden !important;
 }
 
 footer {
-    position: relative; /* Position the footer at the bottom */
+    position: relative ; /* Position the footer at the bottom */
     bottom: 0;
     width: 100%;
 }
