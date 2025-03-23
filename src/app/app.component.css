@@ -86,11 +86,15 @@ form input[type="text"] {
 }
 
 /* Todo text and date styles */
-.todo-text, .todo-date {
+.todo-text {
   overflow: visible; /* Ensure overflow is visible */
   text-overflow: clip; /* Clip text instead of ellipsis */
   white-space: normal; /* Allow text to wrap */
   font-size: 1.1rem; /* Increased font size */
+}
+
+.todo-date {
+  font-size: 0.7rem; /* Set font size for timestamps */
 }
 
 .todo-text {
@@ -100,7 +104,7 @@ form input[type="text"] {
   align-items: flex-start;
   text-align: left;
   width: 100%;
-  padding-left: 1rem;
+  margin-right: 1rem;
 }
 
 .listItem {
