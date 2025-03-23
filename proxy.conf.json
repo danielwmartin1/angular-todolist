@@ -1,0 +1,8 @@
+{
+  "/rest/v1": {
+    "target": "https://afhmppsklvgzzqlipkki.supabase.co",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
