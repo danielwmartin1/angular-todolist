@@ -21,7 +21,7 @@
       <li class="listItem" *ngFor="let todo of todos" [class.completed]="todo.completed" [ngClass]="{'editing': todo.editing}">
         <label *ngIf="!todo.editing">
           <!-- Toggle completion checkbox -->
-          <input type="checkbox" [(ngModel)]="todo.completed" (change)="toggleTodoCompletion(todo)" title="Mark as completed" />
+          <input type="checkbox" [(ngModel)]="todo.completed" (change)="toggleTodoCompletion(todo)" title="Mark as completed" style="cursor: pointer;" />
         </label>
         <section class="todo-text">
           <!-- Display todo text -->
